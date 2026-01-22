@@ -19,7 +19,10 @@ module.exports = (sequelize, DataTypes) => {
     nama_sertif: DataTypes.STRING,
     jumlah_jp: DataTypes.INTEGER,
     catatan: DataTypes.STRING,
-    status: DataTypes.ENUM
+    status: {
+      type: DataTypes.ENUM('pending', 'diterima', 'ditolak'),
+      defaultValue: 'pending'
+    }
   }, {
     sequelize,
     modelName: 'ValidasiJp',
