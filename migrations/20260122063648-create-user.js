@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false
       },
       nip: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         unique: true
       },
       password: {
@@ -38,6 +38,5 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
-    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_Users_role";');
   }
 };

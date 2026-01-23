@@ -44,6 +44,5 @@ module.exports = {
   },
   async down(queryInterface) {
     await queryInterface.dropTable('ValidasiJps');
-    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_ValidasiJps_status";');
   }
 };

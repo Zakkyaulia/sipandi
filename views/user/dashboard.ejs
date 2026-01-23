@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard User - SIPANDI</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
+</head>
+
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-sipandi-green-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-12 h-12 rounded-full object-cover">
+                <div>
+                    <h1 class="text-xl font-bold">SIPANDI</h1>
+                    <p class="text-sm text-sipandi-green-100">Dashboard User</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-right">
+                    <p class="font-semibold">
+                        <%= user.name %>
+                    </p>
+                    <p class="text-sm text-sipandi-green-100">
+                        <%= user.role.toUpperCase() %>
+                    </p>
+                </div>
+                <a href="/logout"
+                    class="bg-white text-sipandi-green-700 px-4 py-2 rounded-lg hover:bg-sipandi-green-50 transition">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, <%= user.name %>!</h2>
+            <p class="text-gray-600">Anda login sebagai User</p>
+        </div>
+
+        <!-- Welcome Card -->
+        <div class="card bg-gradient-to-br from-sipandi-green-500 to-sipandi-green-600 text-white mb-8">
+            <h3 class="text-2xl font-bold mb-4">Sistem Informasi Biro Organisasi</h3>
+            <p class="text-sipandi-green-50">Selamat datang di SIPANDI - Sistem Informasi Biro Organisasi Setda Prov.
+                Sumbar</p>
+        </div>
+
+        <!-- Info Card -->
+        <div class="card">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Informasi Akun</h3>
+            <div class="space-y-2 text-gray-600">
+                <p><span class="font-semibold">Nama:</span>
+                    <%= user.name %>
+                </p>
+                <p><span class="font-semibold">Username:</span>
+                    <%= user.username %>
+                </p>
+                <p><span class="font-semibold">Email:</span>
+                    <%= user.email %>
+                </p>
+                <p><span class="font-semibold">Role:</span>
+                    <%= user.role %>
+                </p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

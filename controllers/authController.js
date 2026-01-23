@@ -4,23 +4,21 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
   try {
-    const { nama, nip, password } = req.body;
+    const { nama, nip, password, role } = req.body; // Tambahkan role jika ada di form
 
-    // Cek apakah NIP sudah terdaftar
     const existingUser = await User.findOne({ where: { nip } });
     if (existingUser) {
       return res.status(400).json({ message: "NIP sudah terdaftar" });
     }
 
-    // Enkripsi password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Simpan ke database
     await User.create({
       nama,
       nip,
-      password: hashedPassword
+      password: hashedPassword,
+      role: role || 'user' // Default ke 'user' jika tidak diisi
     });
 
     res.status(201).json({ message: "Registrasi berhasil" });
@@ -33,21 +31,28 @@ exports.login = async (req, res) => {
   try {
     const { nip, password } = req.body;
 
-    // Cari user berdasarkan NIP
     const user = await User.findOne({ where: { nip } });
     if (!user) {
       return res.status(404).json({ message: "NIP tidak ditemukan" });
     }
 
-    // Cek Password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Password salah" });
     }
 
-    // Buat Token JWT
+    // --- PERBAIKAN: SIMPAN KE SESSION ---
+    // Agar middleware isAuthenticated bisa membaca data user
+    req.session.user = {
+        id: user.id,
+        nama: user.nama,
+        nip: user.nip,
+        role: user.role
+    };
+
+    // Buat Token JWT (Tetap dipertahankan jika Anda butuh untuk API)
     const token = jwt.sign(
-      { id: user.id, nip: user.nip },
+      { id: user.id, nip: user.nip, role: user.role },
       process.env.JWT_SECRET || 'fallback_secret',
       { expiresIn: '24h' }
     );
@@ -55,7 +60,7 @@ exports.login = async (req, res) => {
     res.status(200).json({
       message: "Login berhasil",
       token,
-      user: { nama: user.nama, nip: user.nip }
+      user: req.session.user
     });
   } catch (error) {
     res.status(500).json({ message: "Server error saat login", error: error.message });

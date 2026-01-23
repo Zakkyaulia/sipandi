@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     nip: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       unique: true
     },
     password: {
