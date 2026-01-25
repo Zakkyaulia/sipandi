@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const apiRoutes = require('./routes/api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +42,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/', authRoutes);
 app.use('/admin', adminRoutes); 
 app.use('/user', userRoutes);
+
+app.use('/api', apiRoutes);
 
 // --- ROOT REDIRECT ---
 app.get('/', (req, res) => {
