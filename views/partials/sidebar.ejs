@@ -1,0 +1,47 @@
+<aside class="bg-sipandi-green-800 text-white w-64 min-h-screen flex flex-col shadow-xl transition-all duration-300 hidden md:flex">
+    <div class="p-6 flex items-center space-x-3 border-b border-sipandi-green-700">
+        <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-10 h-10 rounded-full border-2 border-white">
+        <div>
+            <h1 class="text-xl font-bold tracking-wider">SIPANDI</h1>
+            <p class="text-xs text-sipandi-green-200">Biro Organisasi</p>
+        </div>
+    </div>
+
+    <nav class="flex-1 py-6">
+        <ul class="space-y-2 px-4">
+            <li>
+                <a href="<%= user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard' %>" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
+                   <%= page === 'dashboard' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <% if (user.role === 'admin') { %>
+            <li>
+                <a href="/admin/users" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
+                   <%= page === 'users' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <span>Manajemen User</span>
+                </a>
+            </li>
+            <% } %>
+
+            </ul>
+    </nav>
+
+    <div class="p-4 border-t border-sipandi-green-700">
+        <a href="/logout" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-200 hover:bg-red-600 hover:text-white transition-colors duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            <span>Logout</span>
+        </a>
+    </div>
+</aside>

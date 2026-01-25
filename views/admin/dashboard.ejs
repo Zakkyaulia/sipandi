@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,78 +7,55 @@
     <link rel="stylesheet" href="/css/output.css">
     <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
 </head>
+<body class="bg-gray-100 font-sans antialiased">
+    <div class="flex h-screen overflow-hidden">
+        
+        <%- include('../partials/sidebar', { page: 'dashboard' }) %>
 
-<body class="bg-gray-100">
-    <!-- Header -->
-    <header class="bg-sipandi-green-700 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-12 h-12 rounded-full object-cover">
-                <div>
-                    <h1 class="text-xl font-bold">SIPANDI</h1>
-                    <p class="text-sm text-sipandi-green-100">Dashboard Admin</p>
+        <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+            
+            <%- include('../partials/header', { pageTitle: 'Dashboard Admin' }) %>
+
+            <main class="w-full flex-grow p-6">
+                
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, <%= user.nama || user.name %>!</h2>
+                    <p class="text-gray-600">Anda login sebagai Administrator</p>
                 </div>
-            </div>
-            <div class="flex items-center space-x-4">
-                <a href="/admin/users" class="text-sipandi-green-100 hover:text-white transition">Manajemen User</a>
-                <div class="text-right">
-                    <p class="font-semibold">
-                        <%= user.name %>
-                    </p>
-                    <p class="text-sm text-sipandi-green-100">
-                        <%= user.role.toUpperCase() %>
-                    </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="card bg-gradient-to-br from-sipandi-green-500 to-sipandi-green-600 text-white transform hover:scale-105 transition duration-300">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-semibold mb-2 opacity-90">Total Pengguna</h3>
+                                <p class="text-4xl font-bold">2</p>
+                            </div>
+                            <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                <div class="card bg-white shadow-md rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Informasi Sistem</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-3 text-gray-600">
+                            <p class="flex items-center"><span class="font-semibold w-24">Nama:</span> <%= user.nama || user.name %></p>
+                            <p class="flex items-center"><span class="font-semibold w-24">NIP:</span> <%= user.nip || '-' %></p>
+                        </div>
+                        <div class="space-y-3 text-gray-600">
+                            <p class="flex items-center"><span class="font-semibold w-24">Role:</span> <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs uppercase font-bold"><%= user.role %></span></p>
+                            <p class="flex items-center"><span class="font-semibold w-24">User ID:</span> #<%= user.id_user || user.id %></p>
+                        </div>
+                    </div>
                 </div>
-                <a href="/logout"
-                    class="bg-white text-sipandi-green-700 px-4 py-2 rounded-lg hover:bg-sipandi-green-50 transition">
-                    Logout
-                </a>
-            </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, <%= user.name %>!</h2>
-            <p class="text-gray-600">Anda login sebagai Administrator</p>
-        </div>
+            </main>
 
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="card bg-gradient-to-br from-sipandi-green-500 to-sipandi-green-600 text-white">
-                <h3 class="text-lg font-semibold mb-2">Total Pengguna</h3>
-                <p class="text-4xl font-bold">2</p>
-            </div>
-            <div class="card bg-gradient-to-br from-blue-500 to-blue-600 text-white">
-                <h3 class="text-lg font-semibold mb-2">Admin</h3>
-                <p class="text-4xl font-bold">1</p>
-            </div>
-            <div class="card bg-gradient-to-br from-orange-500 to-orange-600 text-white">
-                <h3 class="text-lg font-semibold mb-2">User Biasa</h3>
-                <p class="text-4xl font-bold">1</p>
-            </div>
+            <%- include('../partials/footer') %>
+            
         </div>
-
-        <!-- Info Card -->
-        <div class="card">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Informasi Sistem</h3>
-            <div class="space-y-2 text-gray-600">
-                <p><span class="font-semibold">Username:</span>
-                    <%= user.username %>
-                </p>
-                <p><span class="font-semibold">Email:</span>
-                    <%= user.email %>
-                </p>
-                <p><span class="font-semibold">Role:</span>
-                    <%= user.role %>
-                </p>
-                <p><span class="font-semibold">User ID:</span>
-                    <%= user.id %>
-                </p>
-            </div>
-        </div>
-    </main>
+    </div>
 </body>
-
 </html>

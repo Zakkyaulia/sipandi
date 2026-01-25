@@ -1,0 +1,25 @@
+<header class="bg-white shadow-sm h-16 flex items-center justify-between px-6 lg:px-8">
+    <button class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+
+    <div class="hidden md:block">
+        <h2 class="text-xl font-semibold text-gray-800 capitalize">
+            <%= typeof pageTitle !== 'undefined' ? pageTitle : 'Dashboard' %>
+        </h2>
+    </div>
+
+    <div class="flex items-center space-x-4">
+        <div class="flex flex-col text-right mr-2">
+            <span class="text-sm font-semibold text-gray-800"><%= user.nama || user.name %></span>
+            <span class="text-xs text-sipandi-green-600 font-medium uppercase tracking-wide bg-sipandi-green-50 px-2 py-0.5 rounded-full self-end">
+                <%= user.role %>
+            </span>
+        </div>
+        <div class="h-10 w-10 rounded-full bg-sipandi-green-100 flex items-center justify-center text-sipandi-green-700 font-bold border border-sipandi-green-200">
+            <%= (user.nama || user.name || 'U').charAt(0).toUpperCase() %>
+        </div>
+    </div>
+</header>

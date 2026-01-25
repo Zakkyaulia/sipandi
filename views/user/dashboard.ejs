@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,68 +7,57 @@
     <link rel="stylesheet" href="/css/output.css">
     <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
 </head>
+<body class="bg-gray-100 font-sans antialiased">
+    <div class="flex h-screen overflow-hidden">
+        
+        <%- include('../partials/sidebar', { page: 'dashboard' }) %>
 
-<body class="bg-gray-100">
-    <!-- Header -->
-    <header class="bg-sipandi-green-700 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-12 h-12 rounded-full object-cover">
-                <div>
-                    <h1 class="text-xl font-bold">SIPANDI</h1>
-                    <p class="text-sm text-sipandi-green-100">Dashboard User</p>
+        <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+            
+            <%- include('../partials/header', { pageTitle: 'Dashboard User' }) %>
+
+            <main class="w-full flex-grow p-6">
+                
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, <%= user.nama || user.name %>!</h2>
+                    <p class="text-gray-600">Anda berhasil login ke dalam sistem SIPANDI.</p>
                 </div>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div class="text-right">
-                    <p class="font-semibold">
-                        <%= user.name %>
-                    </p>
-                    <p class="text-sm text-sipandi-green-100">
-                        <%= user.role.toUpperCase() %>
-                    </p>
+
+                <div class="card bg-gradient-to-r from-sipandi-green-600 to-sipandi-green-800 text-white shadow-lg rounded-xl mb-8 p-8 relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold mb-2">Sistem Informasi Biro Organisasi</h3>
+                        <p class="text-sipandi-green-100 max-w-2xl">
+                            Selamat datang di SIPANDI. Gunakan menu navigasi untuk mengakses fitur-fitur pengelolaan barang dan validasi.
+                        </p>
+                    </div>
+                    <div class="absolute right-0 top-0 h-64 w-64 bg-white opacity-5 rounded-full -mr-16 -mt-16 transform translate-x-1/2"></div>
                 </div>
-                <a href="/logout"
-                    class="bg-white text-sipandi-green-700 px-4 py-2 rounded-lg hover:bg-sipandi-green-50 transition">
-                    Logout
-                </a>
-            </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, <%= user.name %>!</h2>
-            <p class="text-gray-600">Anda login sebagai User</p>
-        </div>
+                <div class="card bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Data Diri</h3>
+                    <div class="space-y-4 text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-500 mb-1">Nama Lengkap</p>
+                                <p class="font-medium text-gray-900"><%= user.nama || user.name %></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 mb-1">NIP (Username)</p>
+                                <p class="font-medium text-gray-900"><%= user.nip || user.username || '-' %></p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 mb-1">Role Akses</p>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
+                                    <%= user.role %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
 
-        <!-- Welcome Card -->
-        <div class="card bg-gradient-to-br from-sipandi-green-500 to-sipandi-green-600 text-white mb-8">
-            <h3 class="text-2xl font-bold mb-4">Sistem Informasi Biro Organisasi</h3>
-            <p class="text-sipandi-green-50">Selamat datang di SIPANDI - Sistem Informasi Biro Organisasi Setda Prov.
-                Sumbar</p>
+            <%- include('../partials/footer') %>
         </div>
-
-        <!-- Info Card -->
-        <div class="card">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Informasi Akun</h3>
-            <div class="space-y-2 text-gray-600">
-                <p><span class="font-semibold">Nama:</span>
-                    <%= user.name %>
-                </p>
-                <p><span class="font-semibold">Username:</span>
-                    <%= user.username %>
-                </p>
-                <p><span class="font-semibold">Email:</span>
-                    <%= user.email %>
-                </p>
-                <p><span class="font-semibold">Role:</span>
-                    <%= user.role %>
-                </p>
-            </div>
-        </div>
-    </main>
+    </div>
 </body>
-
 </html>
