@@ -1,36 +1,41 @@
 # Dependencies
-/node_modules
+node_modules/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
-package-lock.json
 
-# Environment variables
+# Environment variables (SANGAT PENTING: Jangan dihapus)
 .env
 .env.local
 .env.*.local
 
-# IDE
-.vscode
-.idea
+# IDE (Settingan Editor)
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
 .DS_Store
 
-# Database
+# Database (File database lokal)
 *.db
 *.sqlite
 *.sqlite3
 
 # Logs
-logs
+logs/
 *.log
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Build outputs
+# Build outputs (Jika nanti di-build)
 /dist
 /build
+/coverage
+
+# Optional: File Upload User (Sesuaikan dengan folder upload Yang Mulia)
+# Agar foto/file user tidak ikut ter-upload ke git
+public/uploads/
+public/images/temp/
