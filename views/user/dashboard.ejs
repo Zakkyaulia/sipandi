@@ -79,7 +79,7 @@
                             <thead class="bg-gray-50 text-gray-500">
                                 <tr>
                                     <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider">Nama Sertifikat</th>
-                                    <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider">Rentang Waktu</th>
+                                    <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider">Periode</th>
                                     <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider">JP</th>
                                     <th class="px-8 py-4 text-xs font-bold uppercase tracking-wider text-right">Aksi</th>
                                 </tr>
@@ -140,19 +140,33 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="space-y-2"> 
-                        <label class="block text-sm font-semibold text-gray-700">Mulai</label>
+                        <label class="block text-sm font-semibold text-gray-700">Bulan</label>
                         <div class="relative">
-                            <input type="date" name="tanggal_mulai" id="tanggal_mulai" required 
-                                class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-sipandi-green-500 focus:border-sipandi-green-500 block transition-all outline-none">
+                            <select name="bulan" id="bulan" required
+                                class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-sipandi-green-500 focus:border-sipandi-green-500 block transition-all outline-none appearance-none">
+                                <option value="" disabled selected>Pilih Bulan</option>
+                                <option value="Januari">Januari</option>
+                                <option value="Februari">Februari</option>
+                                <option value="Maret">Maret</option>
+                                <option value="April">April</option>
+                                <option value="Mei">Mei</option>
+                                <option value="Juni">Juni</option>
+                                <option value="Juli">Juli</option>
+                                <option value="Agustus">Agustus</option>
+                                <option value="September">September</option>
+                                <option value="Oktober">Oktober</option>
+                                <option value="November">November</option>
+                                <option value="Desember">Desember</option>
+                            </select>
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="block text-sm font-semibold text-gray-700">Selesai</label>
+                        <label class="block text-sm font-semibold text-gray-700">Tahun</label>
                         <div class="relative">
-                            <input type="date" name="tanggal_selesai" id="tanggal_selesai" required 
+                            <input type="number" name="tahun" id="tahun" required min="2020" max="2030" value="<%= new Date().getFullYear() %>"
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-sipandi-green-500 focus:border-sipandi-green-500 block transition-all outline-none">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -176,20 +190,37 @@
 
                 <div class="space-y-2">
                     <label class="block text-sm font-semibold text-gray-700">Dokumen Bukti</label>
-                    <div class="flex items-center justify-center w-full">
+                    
+                    <div class="relative w-full">
                         
-                        <label for="files" style="height: 160px;" class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-sipandi-green-500 transition-all group">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-8 h-8 mb-3 text-gray-400 group-hover:text-sipandi-green-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                <p class="mb-1 text-sm text-gray-500"><span class="font-semibold text-sipandi-green-600">Upload</span></p>
-                                <p class="text-xs text-gray-400">PDF/JPG (Max 5MB)</p>
+                        <div id="uploadPlaceholder" class="transition-all duration-300">
+                            <label for="files" style="height: 160px;" class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-sipandi-green-500 transition-all group">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-3 text-gray-400 group-hover:text-sipandi-green-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                    <p class="mb-1 text-sm text-gray-500"><span class="font-semibold text-sipandi-green-600">Klik untuk Upload</span></p>
+                                    <p class="text-xs text-gray-400">PDF/JPG (Max 20MB)</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div id="filePreview" class="hidden transition-all duration-300">
+                            <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl">
+                                <div class="flex items-center gap-3 overflow-hidden">
+                                    <div class="bg-white p-2 rounded-lg text-sipandi-green-600 shadow-sm">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span id="fileNameText" class="text-sm font-semibold text-gray-800 truncate max-w-[200px] md:max-w-xs">filename.pdf</span>
+                                        <span id="fileSizeText" class="text-xs text-gray-500">0 MB</span>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="removeFile()" class="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all" title="Hapus File">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
                             </div>
-                            <input id="files" name="files" type="file" class="hidden" required onchange="updateFileName(this)" />
-                        </label>
-                    </div>
-                    <div id="fileNameDisplay" class="hidden text-xs text-sipandi-green-600 font-medium flex items-center gap-1 mt-1 pl-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span id="fileNameText"></span>
+                        </div>
+
+                        <input id="files" name="files" type="file" class="hidden" required onchange="handleFileSelect(this)" accept=".pdf,.jpg,.jpeg,.png" />
                     </div>
                 </div>
             </div>
@@ -218,26 +249,56 @@
 
         // Toggle Modal Visibility
         function toggleModal() {
-            const modal = document.getElementById('modalBukti');
-            modal.classList.toggle('hidden');
-            if (modal.classList.contains('hidden')) {
-                document.getElementById('formUpload').reset();
-                document.getElementById('fileNameDisplay').classList.add('hidden'); // Reset file display
-            }
+        const modal = document.getElementById('modalBukti');
+        modal.classList.toggle('hidden');
+        if (modal.classList.contains('hidden')) {
+            document.getElementById('formUpload').reset();
+            removeFile(); // Reset tampilan file ke awal
         }
+    }
 
-        // Update display filename
-        function updateFileName(input) {
-            const display = document.getElementById('fileNameDisplay');
-            const text = document.getElementById('fileNameText');
-            if (input.files && input.files[0]) {
-                text.textContent = input.files[0].name;
-                display.classList.remove('hidden');
-            } else {
-                display.classList.add('hidden');
+    // Fungsi saat file dipilih
+    function handleFileSelect(input) {
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const filePreview = document.getElementById('filePreview');
+        const fileNameText = document.getElementById('fileNameText');
+        const fileSizeText = document.getElementById('fileSizeText');
+        
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const fileSizeMB = file.size / (1024 * 1024);
+            const maxSizeMB = 20;
+
+            // Validasi Ukuran
+            if (fileSizeMB > maxSizeMB) {
+                Swal.fire('File Terlalu Besar', `Ukuran file maks ${maxSizeMB}MB. File anda: ${fileSizeMB.toFixed(2)}MB`, 'warning');
+                removeFile(); // Reset jika gagal
+                return;
             }
-        }
 
+            // Update Teks
+            fileNameText.textContent = file.name;
+            fileSizeText.textContent = fileSizeMB.toFixed(2) + ' MB';
+
+            // Swap Tampilan: Sembunyikan Kotak Upload, Munculkan Preview
+            uploadPlaceholder.classList.add('hidden');
+            filePreview.classList.remove('hidden');
+        }
+    }
+
+    // Fungsi untuk menghapus file yang sudah dipilih
+    function removeFile() {
+        const input = document.getElementById('files');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const filePreview = document.getElementById('filePreview');
+
+        // Reset Input Value
+        input.value = '';
+
+        // Swap Tampilan: Munculkan Kotak Upload, Sembunyikan Preview
+        uploadPlaceholder.classList.remove('hidden');
+        filePreview.classList.add('hidden');
+    }
         // Fetch Data dari API
         async function loadData() {
             try {
@@ -263,20 +324,15 @@
                 }
 
                 data.forEach(item => {
-                    // Logic status & perhitungan
                     const status = item.status || 'pending';
 
-                    // Hitung JP jika status bukan ditolak
                     if (status !== 'ditolak') {
                         sumJP += parseInt(item.jumlah_jp || 0);
                         validSertifCount++;
                     }
 
-                    // Format Tanggal
-                    const tglAwal = item.tanggal_mulai ? new Date(item.tanggal_mulai).toLocaleDateString('id-ID') : '-';
-                    const tglAkhir = item.tanggal_selesai ? new Date(item.tanggal_selesai).toLocaleDateString('id-ID') : '-';
+                    const periode = `${item.bulan || '-'} ${item.tahun || ''}`;
 
-                    // Badge Status
                     let statusBadge = '';
                     let rowClass = '';
 
@@ -286,10 +342,9 @@
                         statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 uppercase border border-yellow-200">Menunggu</span>';
                     } else {
                         statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 uppercase border border-red-200">Ditolak</span>';
-                        rowClass = 'opacity-60 bg-gray-50'; // Visual pembeda untuk data ditolak
+                        rowClass = 'opacity-60 bg-gray-50';
                     }
 
-                    // Render Baris Tabel
                     body.innerHTML += `
                         <tr class="hover:bg-gray-50 transition-colors ${rowClass} border-b border-gray-50 last:border-b-0">
                             <td class="px-8 py-5">
@@ -302,14 +357,14 @@
                                         `<a href="/uploads/${item.file_sertif}" target="_blank" class="text-xs text-sipandi-green-600 hover:text-sipandi-green-800 hover:underline flex items-center gap-1 font-medium mt-1">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
                                             Lihat File
-                                         </a>` : 
+                                        </a>` : 
                                         '<span class="text-xs text-gray-400 italic flex items-center gap-1 mt-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Tidak ada file</span>'}
                                 </div>
                             </td>
                             <td class="px-8 py-5 text-gray-600 text-sm">
                                 <div class="flex items-center gap-2">
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    ${tglAwal} - ${tglAkhir}
+                                    ${periode}
                                 </div>
                             </td>
                             <td class="px-8 py-5">
@@ -326,7 +381,6 @@
                         </tr>`;
                 });
 
-                // Update Angka Statistik
                 totalCountDisplay.innerText = validSertifCount;
                 totalJPDisplay.innerText = sumJP;
 
@@ -340,23 +394,32 @@
         document.getElementById('formUpload').onsubmit = async (e) => {
             e.preventDefault();
             
-            // Validasi Input Client-side
-            const tglMulaiVal = document.getElementById('tanggal_mulai').value;
-            const tglSelesaiVal = document.getElementById('tanggal_selesai').value;
+            // 1. Validasi Input Dasar
+            const bulan = document.getElementById('bulan').value;
+            const tahun = document.getElementById('tahun').value;
             const jp = parseInt(document.getElementById('jpInput').value);
+
+            if (!bulan || !tahun) {
+                Swal.fire('Input Kurang', 'Mohon pilih Bulan dan Tahun!', 'warning');
+                return;
+            }
 
             if (isNaN(jp) || jp <= 0) {
                 Swal.fire('Input Salah', 'JP harus angka positif!', 'warning');
                 return;
             }
 
-            if (tglMulaiVal && tglSelesaiVal) {
-                const tglMulai = new Date(tglMulaiVal);
-                const tglSelesai = new Date(tglSelesaiVal);
-                if (tglSelesai < tglMulai) {
-                    Swal.fire('Rentang Salah', 'Tanggal selesai tidak boleh sebelum tanggal mulai!', 'warning');
+            // 2. Validasi File
+            const fileInput = document.getElementById('files');
+            if (fileInput.files.length > 0) {
+                const fileSizeMB = fileInput.files[0].size / (1024 * 1024);
+                if (fileSizeMB > 20) {
+                    Swal.fire('File Terlalu Besar', 'Maksimal ukuran file adalah 20MB', 'warning');
                     return;
                 }
+            } else {
+                Swal.fire('File Kosong', 'Silakan pilih dokumen bukti!', 'warning');
+                return;
             }
 
             // Tampilkan Loading
@@ -368,6 +431,7 @@
             });
 
             const formData = new FormData(e.target);
+            
             try {
                 const res = await fetch('/api/keaktifan/upload', {
                     method: 'POST',
@@ -412,12 +476,8 @@
                         });
 
                         if (res.ok) {
-                            Swal.fire(
-                                'Terhapus!',
-                                'Data berhasil dihapus.',
-                                'success'
-                            );
-                            loadData(); // Refresh tabel
+                            Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success');
+                            loadData(); 
                         } else {
                             const err = await res.json();
                             Swal.fire('Gagal', err.message || 'Tidak dapat menghapus data', 'error');

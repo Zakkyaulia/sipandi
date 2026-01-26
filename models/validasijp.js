@@ -4,7 +4,6 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class ValidasiJp extends Model {
     static associate(models) {
-      // Define association here if needed
       ValidasiJp.belongsTo(models.User, { foreignKey: 'id_user' });
     }
   }
@@ -16,16 +15,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_user: DataTypes.INTEGER,
     nama_sertif: DataTypes.STRING,
-    jumlah_jp: DataTypes.INTEGER, // Di Kabad ini 'JP'
+    jumlah_jp: DataTypes.INTEGER,
     catatan: DataTypes.STRING,
     status: {
       type: DataTypes.ENUM('pending', 'diterima', 'ditolak'),
       defaultValue: 'pending'
     },
-    // Tambahan dari Kabad
+    // KOLOM BARU
     file_sertif: DataTypes.STRING,
-    tanggal_mulai: DataTypes.DATEONLY,
-    tanggal_selesai: DataTypes.DATEONLY
+    bulan: DataTypes.STRING,
+    tahun: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'ValidasiJp',

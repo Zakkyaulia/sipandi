@@ -6,19 +6,19 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: true
     });
-    await queryInterface.addColumn('ValidasiJps', 'tanggal_mulai', {
-      type: Sequelize.DATEONLY,
+    await queryInterface.addColumn('ValidasiJps', 'bulan', {
+      type: Sequelize.STRING, // Akan menyimpan "Januari", "Februari", dst.
       allowNull: true
     });
-    await queryInterface.addColumn('ValidasiJps', 'tanggal_selesai', {
-      type: Sequelize.DATEONLY,
+    await queryInterface.addColumn('ValidasiJps', 'tahun', {
+      type: Sequelize.INTEGER,
       allowNull: true
     });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn('ValidasiJps', 'file_sertif');
-    await queryInterface.removeColumn('ValidasiJps', 'tanggal_mulai');
-    await queryInterface.removeColumn('ValidasiJps', 'tanggal_selesai');
+    await queryInterface.removeColumn('ValidasiJps', 'bulan');
+    await queryInterface.removeColumn('ValidasiJps', 'tahun');
   }
 };

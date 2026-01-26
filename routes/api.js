@@ -8,7 +8,7 @@ const { isAuthenticated } = require('../middleware/auth');
 // Konfigurasi Multer (Persis seperti Kabad)
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/uploads/') // Disimpan di public/uploads agar bisa diakses
+        cb(null, 'public/uploads/')
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -16,7 +16,12 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+    storage: storage,
+    limits: {
+        fileSize: 20 * 1024 * 1024 // Batas 20MB dalam bytes
+    }
+});
 
 // Route API (Dilindungi middleware Session SIPANDI)
 router.get('/keaktifan', isAuthenticated, apiValidasiController.getKeaktifan);

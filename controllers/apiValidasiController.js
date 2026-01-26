@@ -1,10 +1,8 @@
 const { ValidasiJp, User } = require('../models');
 const path = require('path');
 
-// Ambil semua data bukti milik user login
 exports.getKeaktifan = async (req, res) => {
     try {
-        // ADAPTASI: Menggunakan req.session.user.id_user (SIPANDI) bukan req.user.id (JWT Kabad)
         const id_user = req.session.user.id_user;
         
         const data = await ValidasiJp.findAll({
@@ -20,8 +18,8 @@ exports.getKeaktifan = async (req, res) => {
 exports.uploadBukti = async (req, res) => {
     try {
         const id_user = req.session.user.id_user;
-        // Mapping field dari form frontend Kabad ke database SIPANDI
-        const { jp, tanggal_mulai, tanggal_selesai } = req.body; 
+        // GANTI: Ambil bulan dan tahun dari body, bukan tanggal_mulai/selesai
+        const { jp, bulan, tahun } = req.body; 
         
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: "Tidak ada file yang diunggah" });
@@ -30,10 +28,10 @@ exports.uploadBukti = async (req, res) => {
         const uploads = req.files.map(file => ({
             id_user,
             nama_sertif: file.originalname,
-            jumlah_jp: jp, // Mapping ke field ValidasiJp
+            jumlah_jp: jp,
             file_sertif: file.filename,
-            tanggal_mulai: tanggal_mulai,
-            tanggal_selesai: tanggal_selesai,
+            bulan: bulan,  // Simpan Bulan
+            tahun: tahun,  // Simpan Tahun
             status: 'pending',
             catatan: 'Menunggu verifikasi'
         }));
@@ -51,7 +49,6 @@ exports.deleteKeaktifan = async (req, res) => {
         const { id } = req.params;
         const id_user = req.session.user.id_user;
         
-        // Hapus berdasarkan ID dan kepemilikan user (Security)
         const deleted = await ValidasiJp.destroy({ 
             where: { 
                 id_validasiJp: id, 
