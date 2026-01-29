@@ -2,16 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
 const { User } = require('../models');
-const { Op } = require('sequelize'); // Diperlukan untuk fitur pencarian
+const { Op } = require('sequelize'); 
 const bcrypt = require('bcryptjs');
 
 // --- ADMIN DASHBOARD ---
 router.get('/dashboard', isAuthenticated, isAdmin, async (req, res) => {
     try {
-        // 1. Hitung Total ASN
         const totalUsers = await User.count({ where: { role: 'asn' } });
-
-        // 2. Ambil 5 User ASN Terbaru (Tambahan Baru)
         const recentUsers = await User.findAll({
             where: { role: 'asn' },
             limit: 5,
@@ -21,7 +18,7 @@ router.get('/dashboard', isAuthenticated, isAdmin, async (req, res) => {
         res.render('admin/dashboard', { 
             user: req.session.user,
             totalUsers: totalUsers,
-            recentUsers: recentUsers, // Kirim data user terbaru ke view
+            recentUsers: recentUsers,
             page: 'dashboard'
         });
     } catch (error) {
@@ -30,7 +27,7 @@ router.get('/dashboard', isAuthenticated, isAdmin, async (req, res) => {
     }
 });
 
-// --- HALAMAN MANAJEMEN USER (View) ---
+// --- HALAMAN MANAJEMEN USER ---
 router.get('/users', isAuthenticated, isAdmin, (req, res) => {
     res.render('admin/users', { 
         user: req.session.user, 
@@ -38,13 +35,47 @@ router.get('/users', isAuthenticated, isAdmin, (req, res) => {
     });
 });
 
-// --- API: DATA LIST USER (Untuk Tabel) ---
+// ==========================================
+// TAMBAHAN: PLACEHOLDER UNTUK FITUR BARU
+// ==========================================
+
+// 1. Route Manajemen Barang
+router.get('/barang', isAuthenticated, isAdmin, (req, res) => {
+    res.render('placeholder', { 
+        user: req.session.user, 
+        page: 'barang', // Kunci ini harus sama dengan di sidebar.ejs
+        pageTitle: 'Manajemen Barang' 
+    });
+});
+
+// 2. Route Riwayat Pengajuan (Versi Admin)
+router.get('/riwayat-pengajuan', isAuthenticated, isAdmin, (req, res) => {
+    res.render('placeholder', { 
+        user: req.session.user, 
+        page: 'riwayat-pengajuan-admin', // Kunci ini harus sama dengan di sidebar.ejs
+        pageTitle: 'Riwayat Pengajuan Pegawai' 
+    });
+});
+
+// 3. Route Riwayat JP (Versi Admin)
+router.get('/riwayat-jp', isAuthenticated, isAdmin, (req, res) => {
+    res.render('placeholder', { 
+        user: req.session.user, 
+        page: 'riwayat-jp', // Kunci ini harus sama dengan di sidebar.ejs
+        pageTitle: 'Riwayat JP Pegawai' 
+    });
+});
+
+// ==========================================
+// AKHIR TAMBAHAN
+// ==========================================
+
+// --- API: DATA LIST USER ---
 router.get('/users/list', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const { search, role } = req.query;
         let whereClause = {};
 
-        // 1. Logika Pencarian (Nama atau NIP)
         if (search) {
             whereClause = {
                 [Op.or]: [
@@ -54,25 +85,22 @@ router.get('/users/list', isAuthenticated, isAdmin, async (req, res) => {
             };
         }
 
-        // 2. Logika Filter Role
         if (role && role !== 'all') {
             whereClause.role = role;
         }
 
-        // Ambil data dari database
         const users = await User.findAll({
             where: whereClause,
             order: [['createdAt', 'DESC']]
         });
 
-        // Format data agar sesuai dengan userManagement.js
         const formattedUsers = users.map(u => ({
             id: u.id_user,
             name: u.nama,
             username: u.nip,
-            email: '-', // Email tidak ada di database, kita kasih strip
+            email: '-', 
             role: u.role,
-            status: 'active' // Kita anggap semua aktif karena belum ada kolom status
+            status: 'active' 
         }));
 
         res.json({ success: true, users: formattedUsers });
@@ -87,13 +115,11 @@ router.post('/users/create', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const { name, username, password, role } = req.body;
 
-        // Cek NIP ganda
         const existingUser = await User.findOne({ where: { nip: username } });
         if (existingUser) {
             return res.json({ success: false, message: 'NIP sudah terdaftar' });
         }
 
-        // Hash Password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -125,7 +151,6 @@ router.delete('/users/:id', isAuthenticated, isAdmin, async (req, res) => {
 
 // --- API: GENERATE PASSWORD ---
 router.post('/users/generate-password', isAuthenticated, isAdmin, (req, res) => {
-    // Generate password acak sederhana
     const randomPassword = Math.random().toString(36).slice(-8);
     res.json({ success: true, password: randomPassword });
 });
