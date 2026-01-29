@@ -8,7 +8,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "migrate:undo": "npx sequelize-cli db:migrate:undo",
-    "watch:css": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
+    "watch:css": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch",
+    "seed" : "npx sequelize-cli db:seed:all"
   },
   "keywords": [],
   "author": "",
