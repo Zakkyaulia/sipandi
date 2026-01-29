@@ -8,9 +8,16 @@
     <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
 </head>
 <body class="bg-gray-100 font-sans antialiased">
+    <% if (!pageTitle) { %>
+        <% const _map = { 'admin-barang': 'Manajemen Barang', 'admin-riwayat-pengajuan': 'Riwayat Pengajuan', 'admin-riwayat-jp': 'Riwayat JP', 'admin-users': 'Manajemen Pengguna' }; %>
+        <% pageTitle = _map[page] || (page ? page.replace(/[-_]/g, ' ') : 'Placeholder'); %>
+    <% } %>
+
+    <% var sidebarPartial = (user && user.role === 'admin') ? 'partials/sidebaradmin' : 'partials/sidebar'; %>
+
     <div class="flex h-screen overflow-hidden">
         
-        <%- include('partials/sidebar', { page: page }) %>
+        <%- include(sidebarPartial, { page: page }) %>
 
         <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             
