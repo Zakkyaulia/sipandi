@@ -3,16 +3,17 @@ const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const apiRoutes = require('./routes/api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // --- IMPORT ROUTES ---
+const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
-// REVISI: Baris userManagement dihapus karena filenya tidak ada di folder routes
+// Pastikan file routes/pages.js sudah dibuat sesuai saran sebelumnya
+const pageRoutes = require('./routes/pages'); 
 
 // --- MIDDLEWARE ---
 app.use(express.json());
@@ -40,10 +41,12 @@ app.set('views', path.join(__dirname, 'views'));
 
 // --- ROUTES ---
 app.use('/', authRoutes);
-app.use('/admin', adminRoutes); 
+app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
-
 app.use('/api', apiRoutes);
+
+// Route untuk Placeholder (Profile, Submit JP, dll) ditangani di sini
+app.use('/', pageRoutes); 
 
 // --- ROOT REDIRECT ---
 app.get('/', (req, res) => {
