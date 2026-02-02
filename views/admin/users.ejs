@@ -1,94 +1,276 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen User - SIPANDI</title>
     <link rel="stylesheet" href="/css/output.css">
     <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
+
+    <style>
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        button:hover .refresh-icon {
+            animation: spin 0.6s linear infinite;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body class="bg-gray-100 font-sans antialiased">
     <div class="flex h-screen overflow-hidden">
-        
+
         <%- include('../partials/sidebaradmin', { page: 'users' }) %>
 
-        <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            
-            <%- include('../partials/header', { pageTitle: 'Manajemen User' }) %>
+            <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
 
-            <main class="w-full flex-grow p-6">
-                
-                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Daftar Pengguna</h2>
-                        <p class="text-gray-600 text-sm">Kelola akun akses sistem SIPANDI</p>
-                    </div>
-                    <button onclick="openAddModal()" class="w-full sm:w-auto bg-sipandi-green-600 hover:bg-sipandi-green-700 text-white px-4 py-2 rounded-lg font-medium transition shadow-sm flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                        Tambah User
-                    </button>
-                </div>
+                <%- include('../partials/header', { pageTitle: 'Manajemen Pengguna' }) %>
 
-                <div class="bg-white rounded-lg shadow-sm p-4 mb-6 border border-gray-100">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="md:col-span-1">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Cari</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                </span>
-                                <input type="text" id="searchInput" placeholder="Cari nama atau NIP..." class="input-field pl-10 text-sm" onkeyup="searchUsers()">
+                    <main class="w-full flex-grow p-6">
+
+                        <div class="mb-8">
+                            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                <div class="flex flex-col sm:flex-row items-center gap-4">
+
+                                    <div class="flex-1 relative w-full">
+                                        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                            </svg>
+                                        </span>
+
+                                        <input type="text" id="searchInput" placeholder="Cari nama pengguna..." class="w-full pl-10 pr-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 transition-all"
+                                            onkeyup="searchUsers()">
+                                    </div>
+
+                                    <div class="relative w-full sm:w-auto sm:flex-none">
+                                        <select id="roleFilter" onchange="searchUsers()"
+                                            class="cursor-pointer w-full px-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none pr-10">
+                                            <option value="all">Semua Posisi</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="asn">ASN</option>
+                                            <option value="admin_atk">Admin ATK</option>
+                                            <option value="admin_validasi_jp">Admin Validasi JP</option>
+                                        </select>
+
+                                        <div
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <button onclick="resetFilters()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-bold text-sm shadow-sm
+                                       flex items-center justify-center gap-2 transition-all whitespace-nowrap
+                                       w-full sm:w-auto">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                            </path>
+                                        </svg>
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Role</label>
-                            <select id="roleFilter" class="input-field text-sm" onchange="searchUsers()">
-                                <option value="all">Semua Role</option>
-                                <option value="admin">Admin</option>
-                                <option value="asn">ASN</option>
-                            </select>
+
+                        <div id="userCardContainer"
+                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
                         </div>
-                        </div>
+
+                    </main>
+
+                    <%- include('../partials/footer') %>
+            </div>
+    </div>
+
+    <div id="formModal"
+        class="hidden opacity-0 fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all duration-300 ease-out">
+        <div
+            class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative transform scale-95 opacity-0 translate-y-4 transition-all duration-300 ease-out border border-gray-100">
+
+            <button onclick="closeModal()"
+                class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition-colors p-1 rounded-full hover:bg-gray-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+
+            <div class="mb-8">
+                <h3 id="modalTitle" class="text-2xl font-extrabold text-gray-800 tracking-tight"></h3>
+                <p class="text-sm text-gray-500 mt-1">Silakan lengkapi formulir di bawah ini.</p>
+            </div>
+
+            <form id="userForm" onsubmit="handleSubmit(event)" class="space-y-5">
+                <input type="hidden" id="editUserId">
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Nama Lengkap</label>
+                    <input type="text" id="formName" required placeholder="Contoh: Budi Santoso"
+                        class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
                 </div>
 
-                <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIP (Username)</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="userTableBody" class="bg-white divide-y divide-gray-200">
-                                </tbody>
-                        </table>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">NIP (Username)</label>
+                    <input type="text" id="formUsername" required placeholder="Nomor Induk Pegawai"
+                        class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
+                </div>
+
+                <div id="passwordField" class="space-y-1.5">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Password</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="formPassword" placeholder="Buat kata sandi aman"
+                            class="flex-1 px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
+                        <button type="button" onclick="generatePassword()"
+                            class="bg-gray-800 text-white px-4 rounded-xl text-xs font-bold hover:bg-black transition shadow-sm hover:shadow active:scale-95">
+                            ACAK
+                        </button>
                     </div>
                 </div>
 
-            </main>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Role/Posisi</label>
+                    <div class="relative">
+                        <select id="formRole"
+                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm appearance-none focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none cursor-pointer">
+                            <option value="asn">ASN</option>
+                            <option value="admin_atk">Admin ATK</option>
+                            <option value="admin_validasi_jp">Admin Validasi JP</option>
+                        </select>
+                        <div
+                            class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
 
-            <%- include('../partials/footer') %>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Unit Kerja
+                        </label>
+                    <div class="relative">
+                        <select id="formUnitKerja"
+                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm appearance-none focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none cursor-pointer">
+                            <option value="">- Belum Diatur -</option>
+                            <option value="Tata Laksana">Tata Laksana</option>
+                            <option value="Kelembagaan">Kelembagaan</option>
+                            <option value="RBAK">Reformasi Birokrasi dan Akuntabilitas Kinerja (RBAK)</option>
+                        </select>
+                        <div
+                            class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Email
+                        </label>
+                    <input type="email" id="formEmail" placeholder="nama@domain.com"
+                        class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
+                </div>
+
+                <div class="pt-6 flex justify-center">
+                    <button type="submit"
+                        class="w-auto px-10 bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        SIMPAN
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div id="addModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-             <h3 class="text-2xl font-bold text-gray-800 mb-6">Tambah User Baru</h3>
-             <form id="addUserForm" onsubmit="addUser(event)">
-                 <div class="flex gap-3 mt-6">
-                    <button type="submit" class="btn-primary flex-1">Simpan</button>
-                    <button type="button" onclick="closeAddModal()" class="bg-gray-500 text-white px-6 py-2 rounded-lg flex-1">Batal</button>
+    <div id="detailModal"
+        class="hidden opacity-0 fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 transition-all duration-300 ease-out">
+        <div
+            class="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl relative transform scale-95 opacity-0 translate-y-4 transition-all duration-300 ease-out">
+
+            <button onclick="closeDetailModal()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors p-1 rounded-full hover:bg-gray-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Detail Pengguna</h3>
+
+            <div class="space-y-4">
+                <div>
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</p>
+                    <p id="detailName" class="text-lg font-bold text-gray-800"></p>
                 </div>
-              </form>
-         </div>
+
+                <div>
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">NIP</p>
+                    <p id="detailNIP" class="text-lg font-bold text-gray-800 break-all"></p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Role/Posisi</p>
+                    <p id="detailRole" class="text-lg font-bold text-gray-800"></p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Unit Kerja</p>
+                    <p id="detailUnitKerja" class="text-lg font-bold text-gray-800"></p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Email</p>
+                    <p id="detailEmail" class="text-lg font-bold text-gray-800 break-all"></p>
+                </div>
+            </div>
+
+            <div class="pt-6 grid grid-cols-2 gap-3">
+                <button onclick="deleteUserFromDetail()"
+                    class="bg-red-100 hover:bg-red-200 text-red-600 px-4 py-3 rounded-xl font-bold text-sm shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                    HAPUS
+                </button>
+                <button onclick="triggerEditFromDetail()"
+                    class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 py-3 rounded-xl font-bold text-sm shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                        </path>
+                    </svg>
+                    EDIT DATA
+                </button>
+            </div>
+        </div>
     </div>
-    
-    <div id="toast" class="hidden fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50"></div>
+
 
     <script src="/js/userManagement.js"></script>
 </body>
+
 </html>

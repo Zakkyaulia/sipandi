@@ -27,8 +27,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     role: {
-      type: DataTypes.ENUM('admin', 'asn'),
+      type: DataTypes.ENUM('admin', 'asn', 'admin_atk', 'admin_validasi_jp'),
       defaultValue: 'asn'
+    },
+    unit_kerja: {
+      type: DataTypes.ENUM('Tata Laksana', 'Kelembagaan', 'RBAK'),
+      allowNull: true
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     sequelize,

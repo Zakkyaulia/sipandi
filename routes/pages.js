@@ -15,7 +15,14 @@ const renderPlaceholder = (pageKey, pageTitle) => {
 };
 
 // Route untuk masing-masing opsi sidebar
-router.get('/profile', isAuthenticated, renderPlaceholder('profile', 'Profil Pengguna'));
+// Route untuk masing-masing opsi sidebar
+router.get('/profile', isAuthenticated, (req, res) => {
+    res.render('user/profile', {
+        user: req.session.user,
+        page: 'profile',
+        pageTitle: 'Profil Saya'
+    });
+});
 router.get('/submit-jp', isAuthenticated, renderPlaceholder('submit-jp', 'Submit JP'));
 router.get('/riwayat-submit', isAuthenticated, renderPlaceholder('riwayat-submit', 'Riwayat Submit'));
 router.get('/pengajuan', isAuthenticated, renderPlaceholder('pengajuan', 'Pengajuan Barang'));

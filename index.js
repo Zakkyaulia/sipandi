@@ -13,7 +13,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
 // Pastikan file routes/pages.js sudah dibuat sesuai saran sebelumnya
-const pageRoutes = require('./routes/pages'); 
+const pageRoutes = require('./routes/pages');
 
 // --- MIDDLEWARE ---
 app.use(express.json());
@@ -46,13 +46,17 @@ app.use('/user', userRoutes);
 app.use('/api', apiRoutes);
 
 // Route untuk Placeholder (Profile, Submit JP, dll) ditangani di sini
-app.use('/', pageRoutes); 
+app.use('/', pageRoutes);
 
 // --- ROOT REDIRECT ---
 app.get('/', (req, res) => {
     if (req.session && req.session.user) {
         if (req.session.user.role === 'admin') {
             return res.redirect('/admin/dashboard');
+        } else if (req.session.user.role === 'admin_atk') {
+            return res.redirect('/placeholder?page=admin-barang');
+        } else if (req.session.user.role === 'admin_validasi_jp') {
+            return res.redirect('/placeholder?page=admin-riwayat-jp');
         } else {
             return res.redirect('/user/dashboard');
         }
@@ -65,6 +69,10 @@ app.get('/dashboard', (req, res) => {
     if (req.session && req.session.user) {
         if (req.session.user.role === 'admin') {
             return res.redirect('/admin/dashboard');
+        } else if (req.session.user.role === 'admin_atk') {
+            return res.redirect('/placeholder?page=admin-barang');
+        } else if (req.session.user.role === 'admin_validasi_jp') {
+            return res.redirect('/placeholder?page=admin-riwayat-jp');
         } else {
             return res.redirect('/user/dashboard');
         }

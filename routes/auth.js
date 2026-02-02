@@ -25,14 +25,14 @@ router.post('/login', async (req, res) => {
         });
 
         if (!user) {
-            return res.render('login', { error: 'Username atau password salah', success: null });
+            return res.json({ success: false, message: 'Username atau password salah' });
         }
 
         // Check password
         const isValidPassword = await bcrypt.compare(password, user.password);
 
         if (!isValidPassword) {
-            return res.render('login', { error: 'Username atau password salah', success: null });
+            return res.json({ success: false, message: 'Username atau password salah' });
         }
 
         // Create session
@@ -40,18 +40,25 @@ router.post('/login', async (req, res) => {
             id_user: user.id_user,
             nama: user.nama,
             nip: user.nip,
-            role: user.role
+            role: user.role,
+            unit_kerja: user.unit_kerja,
+            email: user.email
         };
 
-        // Redirect based on role
+        let redirectUrl = '/user/dashboard';
         if (user.role === 'admin') {
-            res.redirect('/admin/dashboard');
-        } else {
-            res.redirect('/user/dashboard');
+            redirectUrl = '/admin/dashboard';
+        } else if (user.role === 'admin_atk') {
+            redirectUrl = '/placeholder?page=admin-barang';
+        } else if (user.role === 'admin_validasi_jp') {
+            redirectUrl = '/placeholder?page=admin-riwayat-jp';
         }
+
+        return res.json({ success: true, redirectUrl, message: 'Login berhasil' });
+
     } catch (error) {
         console.error('Login error:', error);
-        res.render('login', { error: 'Terjadi kesalahan saat login', success: null });
+        return res.json({ success: false, message: 'Terjadi kesalahan saat login' });
     }
 });
 
