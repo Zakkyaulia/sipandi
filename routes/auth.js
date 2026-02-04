@@ -17,20 +17,25 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        // Find user by username (using email or nip as username)
+        // Validasi NIP: Hanya 18 karakter, kecuali username adalah 'admin'
+        if (username !== 'admin' && username.length !== 18) {
+            return res.json({ 
+                success: false, 
+                message: 'NIP harus berjumlah 18 digit angka' 
+            });
+        }
+
+        // Cari user berdasarkan NIP
         const user = await User.findOne({
-            where: {
-                nip: username
-            }
+            where: { nip: username }
         });
 
         if (!user) {
             return res.json({ success: false, message: 'Username atau password salah' });
         }
 
-        // Check password
+        // Cek password
         const isValidPassword = await bcrypt.compare(password, user.password);
-
         if (!isValidPassword) {
             return res.json({ success: false, message: 'Username atau password salah' });
         }

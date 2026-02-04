@@ -101,6 +101,21 @@ const adminPengajuanController = {
         }
     },
 
+    getRekapPengajuan: async (req, res) => {
+        try {
+            const rekap = await Pengajuan.findAll({
+                attributes: [
+                    'status_pengajuan',
+                    [require('../models').sequelize.fn('COUNT', require('../models').sequelize.col('id_pengajuan')), 'total']
+                ],
+                group: ['status_pengajuan']
+            });
+            res.json({ success: true, data: rekap });
+        } catch (error) {
+            res.json({ success: false, message: error.message });
+        }
+    },
+
     // API: Approve Pengajuan
     approvePengajuan: async (req, res) => {
         try {

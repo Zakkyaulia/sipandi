@@ -85,6 +85,21 @@ const adminJpController = {
         }
     },
 
+    getRekapJp: async (req, res) => {
+        try {
+            const rekap = await ValidasiJp.findAll({
+                attributes: [
+                    'status',
+                    [require('../models').sequelize.fn('COUNT', require('../models').sequelize.col('id_validasiJp')), 'total']
+                ],
+                group: ['status']
+            });
+            res.json({ success: true, data: rekap });
+        } catch (error) {
+            res.json({ success: false, message: error.message });
+        }
+    },
+
     // API: Approve JP Submission
     approveJp: async (req, res) => {
         try {

@@ -1,69 +1,94 @@
 const express = require('express');
 const router = express.Router();
+
+// Controllers
 const adminJpController = require('../controllers/adminJpController');
-const { isAuthenticated, isAdmin } = require('../middleware/auth');
 const userController = require('../controllers/userController');
 const inventoryController = require('../controllers/inventoryController');
 const adminPengajuanController = require('../controllers/adminPengajuanController');
 
-// --- ADMIN DASHBOARD ---
-router.get('/dashboard', isAuthenticated, isAdmin, userController.getDashboard);
+// Middleware - Pastikan Yang Mulia sudah memperbarui middleware/auth.js sesuai saran sebelumnya
+const { 
+    isAuthenticated, 
+    isAdminUtama, 
+    isAdminAtk, 
+    isAdminJp 
+} = require('../middleware/auth');
 
-// --- HALAMAN MANAJEMEN USER (View) ---
-router.get('/users', isAuthenticated, isAdmin, userController.getUsersPage);
+// ==========================================
+// MODAL HAK AKSES & DASHBOARD
+// ==========================================
 
-// --- API: DATA LIST USER (Untuk Tabel) ---
-router.get('/users/list', isAuthenticated, isAdmin, userController.getUsersList);
+// Dashboard Utama (Admin Utama)
+router.get('/dashboard', isAuthenticated, isAdminUtama, userController.getDashboard);
 
-// --- API: TAMBAH USER BARU ---
-router.post('/users/create', isAuthenticated, isAdmin, userController.createUser);
 
-// --- API: UPDATE USER ---
-router.put('/users/:id', isAuthenticated, isAdmin, userController.updateUser);
+// ==========================================
+// MODUL MANAJEMEN AKUN (Admin Utama)
+// ==========================================
 
-// --- API: HAPUS USER ---
-router.delete('/users/:id', isAuthenticated, isAdmin, userController.deleteUser);
+// View Manajemen User
+router.get('/users', isAuthenticated, isAdminUtama, userController.getUsersPage);
 
-// --- API: GENERATE PASSWORD ---
-router.post('/users/generate-password', isAuthenticated, isAdmin, userController.generatePassword);
+// API Manajemen User
+router.get('/users/list', isAuthenticated, isAdminUtama, userController.getUsersList);
+router.post('/users/create', isAuthenticated, isAdminUtama, userController.createUser);
+router.put('/users/:id', isAuthenticated, isAdminUtama, userController.updateUser);
+router.delete('/users/:id', isAuthenticated, isAdminUtama, userController.deleteUser);
+router.post('/users/generate-password', isAuthenticated, isAdminUtama, userController.generatePassword);
 
-// --- HALAMAN MANAJEMEN BARANG (View) ---
-router.get('/inventory', isAuthenticated, isAdmin, inventoryController.getInventoryPage);
 
-// --- API: DATA LIST BARANG ---
-router.get('/inventory/list', isAuthenticated, isAdmin, inventoryController.getInventoryList);
+// ==========================================
+// MODUL DATA REFERENSI & STOK (Admin Utama & Admin ATK)
+// ==========================================
 
-// --- API: TAMBAH BARANG ---
-router.post('/inventory/create', isAuthenticated, isAdmin, inventoryController.createBarang);
+// View Manajemen Barang
+router.get('/inventory', isAuthenticated, isAdminAtk, inventoryController.getInventoryPage);
 
-// --- API: UPDATE BARANG ---
-router.put('/inventory/:id', isAuthenticated, isAdmin, inventoryController.updateBarang);
+// API Manajemen Barang
+router.get('/inventory/list', isAuthenticated, isAdminAtk, inventoryController.getInventoryList);
+router.post('/inventory/create', isAuthenticated, isAdminAtk, inventoryController.createBarang);
+router.put('/inventory/:id', isAuthenticated, isAdminAtk, inventoryController.updateBarang);
+router.delete('/inventory/:id', isAuthenticated, isAdminAtk, inventoryController.deleteBarang);
 
-// --- API: HAPUS BARANG ---
-router.delete('/inventory/:id', isAuthenticated, isAdmin, inventoryController.deleteBarang);
 
-// --- HALAMAN KELOLA PENGAJUAN (View) ---
-router.get('/pengajuan', isAuthenticated, isAdmin, adminPengajuanController.getPengajuanPage);
+// ==========================================
+// MODUL VERIFIKASI & PERSETUJUAN (Sesuai Bagian Yang Mulia)
+// ==========================================
 
-// --- API: DATA LIST PENGAJUAN ---
-router.get('/pengajuan/list', isAuthenticated, isAdmin, adminPengajuanController.getPengajuanList);
+// --- Verifikasi Pengajuan Barang (Admin ATK) ---
+router.get('/pengajuan', isAuthenticated, isAdminAtk, adminPengajuanController.getPengajuanPage);
+router.get('/pengajuan/list', isAuthenticated, isAdminAtk, adminPengajuanController.getPengajuanList);
+router.post('/pengajuan/approve/:id', isAuthenticated, isAdminAtk, adminPengajuanController.approvePengajuan);
+router.post('/pengajuan/reject/:id', isAuthenticated, isAdminAtk, adminPengajuanController.rejectPengajuan);
 
-// --- API: APPROVE PENGAJUAN ---
-router.post('/pengajuan/approve/:id', isAuthenticated, isAdmin, adminPengajuanController.approvePengajuan);
+// --- Verifikasi Validasi JP ASN (Admin JP) ---
+router.get('/jp', isAuthenticated, isAdminJp, adminJpController.getJpPage);
+router.get('/jp/list', isAuthenticated, isAdminJp, adminJpController.getJpList);
+router.post('/jp/approve/:id', isAuthenticated, isAdminJp, adminJpController.approveJp);
+router.post('/jp/reject/:id', isAuthenticated, isAdminJp, adminJpController.rejectJp);
 
-// --- API: REJECT PENGAJUAN ---
-router.post('/pengajuan/reject/:id', isAuthenticated, isAdmin, adminPengajuanController.rejectPengajuan);
+// ==========================================
+// MODUL LAPORAN (Rekapitulasi) - Milik Yang Mulia
+// ==========================================
 
-// --- HALAMAN KELOLA JP (View) ---
-router.get('/jp', isAuthenticated, isAdmin, adminJpController.getJpPage);
+// Laporan Pengajuan Barang (Akses: Admin Utama & Admin ATK)
+router.get('/laporan/pengajuan', isAuthenticated, isAdminAtk, adminPengajuanController.getRekapPengajuan);
 
-// --- API: DATA LIST JP ---
-router.get('/jp/list', isAuthenticated, isAdmin, adminJpController.getJpList);
+// Laporan Validasi JP (Akses: Admin Utama & Admin JP)
+router.get('/laporan/jp', isAuthenticated, isAdminJp, adminJpController.getRekapJp);
 
-// --- API: APPROVE JP ---
-router.post('/jp/approve/:id', isAuthenticated, isAdmin, adminJpController.approveJp);
+// Laporan Stok Barang (Akses: Admin Utama & Admin ATK)
+router.get('/laporan/stok', isAuthenticated, isAdminAtk, inventoryController.getInventoryList); 
 
-// --- API: REJECT JP ---
-router.post('/jp/reject/:id', isAuthenticated, isAdmin, adminJpController.rejectJp);
+// Laporan Pengguna (Akses: Admin Utama)
+router.get('/laporan/users', isAuthenticated, isAdminUtama, userController.getUsersList);
+
+router.get('/laporan', isAuthenticated, (req, res) => {
+    res.render('admin/laporan', {
+        user: req.session.user,
+        page: 'laporan'
+    });
+});
 
 module.exports = router;
