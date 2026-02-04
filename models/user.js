@@ -4,7 +4,17 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // relasi nanti di sini
+      // User has many Pengajuan (as submitter)
+      User.hasMany(models.Pengajuan, {
+        foreignKey: 'id_user',
+        as: 'pengajuans'
+      });
+
+      // User has many Pengajuan (as processor/admin)
+      User.hasMany(models.Pengajuan, {
+        foreignKey: 'diproses_oleh',
+        as: 'processed_pengajuans'
+      });
     }
   }
 

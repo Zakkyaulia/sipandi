@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola JP - SIPANDI</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="bg-gray-100 font-sans antialiased">
+    <div class="flex h-screen overflow-hidden">
+
+        <%- include('../partials/sidebaradmin', { page: 'jp' }) %>
+
+            <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+
+                <%- include('../partials/header', { pageTitle: 'Kelola JP' }) %>
+
+                    <main class="w-full flex-grow p-6">
+
+                        <!-- Filter & Search Section -->
+                        <div class="mb-8">
+                            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                <!-- Row 1: Search, Status, Bidang -->
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+
+                                    <!-- Search Bar -->
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        <input type="text" id="searchInput"
+                                            placeholder="Cari nama user atau sertifikat..." class="w-full pl-10 pr-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 transition-all"
+                                            onkeyup="searchJp()">
+                                    </div>
+
+                                    <!-- Status Filter -->
+                                    <div class="relative">
+                                        <select id="statusFilter" onchange="searchJp()"
+                                            class="cursor-pointer w-full px-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none">
+                                            <option value="all">Semua Status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="diterima">Diterima</option>
+                                            <option value="ditolak">Ditolak</option>
+                                        </select>
+                                        <div
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bidang Filter -->
+                                    <div class="relative">
+                                        <select id="bidangFilter" onchange="searchJp()"
+                                            class="cursor-pointer w-full px-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none">
+                                            <option value="all">Semua Bidang</option>
+                                            <option value="Ketatausahaan">Ketatausahaan</option>
+                                            <option value="Tata Laksana">Tata Laksana</option>
+                                            <option value="Reformasi Birokrasi Akuntabilitas Kinerja">Reformasi
+                                                Birokrasi Akuntabilitas Kinerja</option>
+                                        </select>
+                                        <div
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Row 2: Bulan, Tahun -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                                    <!-- Bulan Filter -->
+                                    <div class="relative">
+                                        <select id="bulanFilter" onchange="searchJp()"
+                                            class="cursor-pointer w-full px-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none">
+                                            <option value="all">Semua Bulan</option>
+                                            <option value="Januari">Januari</option>
+                                            <option value="Februari">Februari</option>
+                                            <option value="Maret">Maret</option>
+                                            <option value="April">April</option>
+                                            <option value="Mei">Mei</option>
+                                            <option value="Juni">Juni</option>
+                                            <option value="Juli">Juli</option>
+                                            <option value="Agustus">Agustus</option>
+                                            <option value="September">September</option>
+                                            <option value="Oktober">Oktober</option>
+                                            <option value="November">November</option>
+                                            <option value="Desember">Desember</option>
+                                        </select>
+                                        <div
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tahun Filter -->
+                                    <div class="relative">
+                                        <select id="tahunFilter" onchange="searchJp()"
+                                            class="cursor-pointer w-full px-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none">
+                                            <option value="all">Semua Tahun</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2020">2020</option>
+                                        </select>
+                                        <div
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- JP Table -->
+                        <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gradient-to-r from-sipandi-green-600 to-emerald-600 text-white">
+                                        <tr>
+                                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                No</th>
+                                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                Tanggal</th>
+                                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                Pengaju</th>
+                                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                Bidang</th>
+                                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">
+                                                Nama Sertifikat</th>
+                                            <th
+                                                class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">
+                                                Jumlah JP</th>
+                                            <th
+                                                class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">
+                                                Bulan/Tahun</th>
+                                            <th
+                                                class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">
+                                                Status</th>
+                                            <th
+                                                class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">
+                                                Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="jpTableBody" class="divide-y divide-gray-200">
+                                        <!-- Rows will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Empty State -->
+                            <div id="emptyState" class="hidden text-center py-12">
+                                <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                                <p class="text-gray-500 text-lg font-semibold">Tidak ada submit JP</p>
+                                <p class="text-gray-400 text-sm mt-1">Submit JP dari user akan muncul di sini</p>
+                            </div>
+                        </div>
+
+                    </main>
+
+                    <%- include('../partials/footer') %>
+            </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal"
+        class="hidden opacity-0 fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all duration-300">
+        <div
+            class="bg-white rounded-2xl p-8 max-w-3xl w-full shadow-2xl relative transform scale-95 opacity-0 translate-y-4 transition-all duration-300 max-h-[90vh] overflow-y-auto">
+
+            <button onclick="closeDetailModal()"
+                class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition-colors p-1 rounded-full hover:bg-gray-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+
+            <h3 class="text-2xl font-extrabold text-gray-800 mb-6 border-b pb-3">Detail Submit JP</h3>
+
+            <div class="space-y-4 mb-6">
+                <!-- User Info -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-2">Informasi Pengaju</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-500">Nama</p>
+                            <p id="detailNama" class="text-sm font-bold text-gray-800"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">NIP</p>
+                            <p id="detailNIP" class="text-sm font-bold text-gray-800"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Bidang</p>
+                            <p id="detailBidang" class="text-sm font-bold text-gray-800"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Tanggal Submit</p>
+                            <p id="detailTanggal" class="text-sm font-bold text-gray-800"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JP Info -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-2">Informasi JP</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-500">Nama Sertifikat</p>
+                            <p id="detailNamaSertif" class="text-sm font-bold text-gray-800"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Jumlah JP</p>
+                            <p id="detailJumlahJp" class="text-sm font-bold text-gray-800"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Bulan/Tahun</p>
+                            <p id="detailBulanTahun" class="text-sm font-bold text-gray-800"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Status</p>
+                            <div id="detailStatus"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catatan User -->
+                <div id="detailCatatanDiv" class="hidden">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Catatan User</p>
+                    <p id="detailCatatan" class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg"></p>
+                </div>
+
+                <!-- File Sertifikat -->
+                <div id="detailFileDiv" class="hidden">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-2">File Sertifikat</p>
+                    <a id="detailFileLink" target="_blank"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                            </path>
+                        </svg>
+                        Lihat File
+                    </a>
+                </div>
+            </div>
+
+            <!-- Action Form (only for status 'pending') -->
+            <div id="actionForm" class="hidden">
+                <div class="border-t pt-6">
+                    <h4 class="text-lg font-bold text-gray-800 mb-4">Proses Submit JP</h4>
+
+                    <!-- Catatan Admin -->
+                    <div class="mb-4">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Catatan
+                            Admin</label>
+                        <textarea id="catatanAdmin" rows="3"
+                            placeholder="Tambahkan catatan (opsional untuk approve, wajib untuk reject)..."
+                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none resize-none"></textarea>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-3">
+                        <button onclick="rejectJp()"
+                            class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-bold text-sm shadow-lg transition-all">
+                            Tolak
+                        </button>
+                        <button onclick="approveJp()"
+                            class="flex-1 bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white py-3 rounded-xl font-bold text-sm shadow-lg transition-all">
+                            Setujui
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Close Button (for processed submissions) -->
+            <div id="closeButton" class="hidden mt-6 flex justify-end">
+                <button onclick="closeDetailModal()"
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-xl font-bold text-sm transition-all">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/adminJp.js"></script>
+</body>
+
+</html>

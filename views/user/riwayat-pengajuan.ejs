@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Pengajuan - SIPANDI</title>
+    <link rel="stylesheet" href="/css/output.css">
+    <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="bg-gray-100 font-sans antialiased">
+    <div class="flex h-screen overflow-hidden">
+
+        <%- include('../partials/sidebar', { page: 'riwayat' }) %>
+
+            <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+
+                <%- include('../partials/header', { pageTitle: 'Riwayat Pengajuan' }) %>
+
+                    <main class="w-full flex-grow p-6">
+
+                        <!-- Filter & Search Section -->
+                        <div class="mb-8">
+                            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                <div class="flex flex-row items-center gap-4">
+
+                                    <!-- Search Bar -->
+                                    <div class="flex-1 relative">
+                                        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        <input type="text" id="searchInput" placeholder="Cari barang..." class="w-full pl-10 pr-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 transition-all"
+                                            onkeyup="searchPengajuan()">
+                                    </div>
+
+                                    <!-- Status Filter -->
+                                    <div class="relative">
+                                        <select id="statusFilter" onchange="searchPengajuan()"
+                                            class="cursor-pointer px-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none pr-10">
+                                            <option value="all">Semua Status</option>
+                                            <option value="diajukan">Diajukan</option>
+                                            <option value="disetujui">Disetujui</option>
+                                            <option value="ditolak">Ditolak</option>
+                                        </select>
+                                        <div
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pengajuan List -->
+                        <div id="pengajuanList" class="space-y-4">
+                            <!-- Items will be populated by JavaScript -->
+                        </div>
+
+                    </main>
+
+                    <%- include('../partials/footer') %>
+            </div>
+    </div>
+
+    <!-- Modal Detail -->
+    <div id="detailModal"
+        class="hidden opacity-0 fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all duration-300">
+        <div
+            class="bg-white rounded-2xl p-8 max-w-3xl w-full shadow-2xl relative transform scale-95 opacity-0 translate-y-4 transition-all duration-300 max-h-[90vh] overflow-y-auto">
+
+            <button onclick="closeDetailModal()"
+                class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition-colors p-1 rounded-full hover:bg-gray-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+
+            <h3 class="text-2xl font-extrabold text-gray-800 mb-6 border-b pb-3">Detail Pengajuan</h3>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Pengajuan</p>
+                        <p id="detailTanggal" class="text-sm text-gray-800"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-500 uppercase mb-1">Status</p>
+                        <div id="detailStatus"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-2">Barang yang Diajukan</p>
+                    <div id="detailItems" class="space-y-2">
+                        <!-- Items will be populated -->
+                    </div>
+                </div>
+
+                <div id="detailCatatanUser" class="hidden">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Catatan Anda</p>
+                    <p id="detailCatatanUserText" class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg"></p>
+                </div>
+
+                <div id="detailCatatanAdmin" class="hidden">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Catatan Admin</p>
+                    <p id="detailCatatanAdminText" class="text-sm text-gray-700 bg-blue-50 p-3 rounded-lg"></p>
+                </div>
+
+                <div id="detailTanggalDiproses" class="hidden">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Diproses Pada</p>
+                    <p id="detailTanggalDiprosesText" class="text-sm text-gray-700"></p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="closeDetailModal()"
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-xl font-bold text-sm transition-all">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/riwayatPengajuan.js"></script>
+</body>
+
+</html>
