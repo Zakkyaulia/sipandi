@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { User } = require('../models');
+const passwordResetController = require('../controllers/passwordResetController');
 
 // GET Login page
 router.get('/login', (req, res) => {
@@ -19,9 +20,9 @@ router.post('/login', async (req, res) => {
     try {
         // Validasi NIP: Hanya 18 karakter, kecuali username adalah 'admin'
         if (username !== 'admin' && username.length !== 18) {
-            return res.json({ 
-                success: false, 
-                message: 'NIP harus berjumlah 18 digit angka' 
+            return res.json({
+                success: false,
+                message: 'NIP harus berjumlah 18 digit angka'
             });
         }
 
@@ -78,10 +79,10 @@ router.get('/register', (req, res) => {
 
 // POST Register
 router.post('/register', async (req, res) => {
-    const { username, nip, password, confirmPassword } = req.body;
+    const { username, nip, password, confirmPassword, email, unit_kerja } = req.body;
 
     // Validation
-    if (!username || !nip || !password || !confirmPassword) {
+    if (!username || !nip || !password || !confirmPassword || !email || !unit_kerja) {
         return res.render('register', {
             error: 'Semua field harus diisi',
             success: null
@@ -131,7 +132,9 @@ router.post('/register', async (req, res) => {
             nama: username,
             nip,
             password: hashedPassword,
-            role: 'asn' // Default role is asn (ASN)
+            role: 'asn', // Default role is asn (ASN)
+            email,
+            unit_kerja
         });
 
         // Redirect to login with success message
@@ -157,5 +160,15 @@ router.get('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
+
+// --- Password Reset Routes ---
+router.get('/forgot-password', passwordResetController.renderForgotPassword);
+router.post('/forgot-password', passwordResetController.sendOTP);
+
+router.get('/verify-otp', passwordResetController.renderVerifyOTP);
+router.post('/verify-otp', passwordResetController.verifyOTP);
+
+router.get('/reset-password', passwordResetController.renderResetPassword);
+router.post('/reset-password', passwordResetController.resetPassword);
 
 module.exports = router;

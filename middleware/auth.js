@@ -9,8 +9,8 @@ const isAdminUtama = (req, res, next) => {
     if (req.session.user && req.session.user.role === 'admin') {
         return next();
     }
-    res.status(403).render('error', { 
-        message: 'Akses ditolak. Halaman ini hanya dapat diakses oleh Admin Utama.' 
+    res.status(403).render('error', {
+        message: 'Akses ditolak. Halaman ini hanya dapat diakses oleh Admin Utama.'
     });
 };
 
@@ -19,8 +19,8 @@ const isAdminAtk = (req, res, next) => {
     if (role === 'admin' || role === 'admin_atk') {
         return next();
     }
-    res.status(403).render('error', { 
-        message: 'Akses ditolak. Halaman ini khusus untuk Admin ATK.' 
+    res.status(403).render('error', {
+        message: 'Akses ditolak. Halaman ini khusus untuk Admin ATK.'
     });
 };
 
@@ -29,33 +29,33 @@ const isAdminJp = (req, res, next) => {
     if (role === 'admin' || role === 'admin_validasi_jp') {
         return next();
     }
-    res.status(403).render('error', { 
-        message: 'Akses ditolak. Halaman ini khusus untuk Admin Validasi JP.' 
+    res.status(403).render('error', {
+        message: 'Akses ditolak. Halaman ini khusus untuk Admin Validasi JP.'
     });
 };
 
 const isAsn = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'asn') {
+    if (req.session.user && (req.session.user.role === 'asn' || req.session.user.role === 'asn2')) {
         return next();
     }
-    res.status(403).render('error', { 
-        message: 'Akses ditolak. Hanya ASN yang dapat mengakses halaman ini.' 
+    res.status(403).render('error', {
+        message: 'Akses ditolak. Hanya ASN yang dapat mengakses halaman ini.'
     });
 };
 
 const isUser = (req, res, next) => {
     const role = req.session.user.role;
-    if (role === 'user' || role === 'asn') {
+    if (role === 'user' || role === 'asn' || role === 'asn2') {
         return next();
     }
     res.status(403).render('error', { message: 'Akses ditolak.' });
 };
 
-module.exports = { 
-    isAuthenticated, 
-    isAdminUtama, 
-    isAdminAtk, 
-    isAdminJp, 
-    isAsn, 
-    isUser 
+module.exports = {
+    isAuthenticated,
+    isAdminUtama,
+    isAdminAtk,
+    isAdminJp,
+    isAsn,
+    isUser
 };

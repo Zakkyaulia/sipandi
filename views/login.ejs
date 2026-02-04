@@ -99,6 +99,12 @@
                     class="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 focus:border-sipandi-green-500 focus:ring-4 focus:ring-sipandi-green-100 outline-none transition-all bg-gray-50 focus:bg-white text-gray-800 placeholder-gray-400"
                     placeholder="Masukkan kata sandi" autocomplete="current-password">
                 </div>
+                <div class="flex justify-end mt-2">
+                  <a href="/forgot-password"
+                    class="text-sm text-sipandi-green-600 hover:text-emerald-700 font-semibold hover:underline">
+                    Lupa Kata Sandi?
+                  </a>
+                </div>
               </div>
 
               <div class="pt-2">
@@ -129,8 +135,8 @@
     <script>
       Swal.fire({
         icon: 'success',
-        title: 'Registrasi Berhasil!',
-        text: 'Registrasi berhasil, silahkan lakukan login',
+        title: 'Berhasil!',
+        text: '<%= success %>',
         confirmButtonText: 'OKE',
         buttonsStyling: false,
         customClass: {

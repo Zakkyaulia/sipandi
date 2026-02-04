@@ -61,6 +61,7 @@ app.get('/', (req, res) => {
         } else if (req.session.user.role === 'admin_validasi_jp') {
             return res.redirect('/placeholder?page=admin-riwayat-jp');
         } else {
+            // asn dan asn2 masuk ke user dashboard
             return res.redirect('/user/dashboard');
         }
     }
@@ -77,6 +78,7 @@ app.get('/dashboard', (req, res) => {
         } else if (req.session.user.role === 'admin_validasi_jp') {
             return res.redirect('/placeholder?page=admin-riwayat-jp');
         } else {
+            // asn dan asn2 masuk ke user dashboard
             return res.redirect('/user/dashboard');
         }
     }

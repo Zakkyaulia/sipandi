@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     role: {
-      type: DataTypes.ENUM('admin', 'asn', 'admin_atk', 'admin_validasi_jp'),
+      type: DataTypes.ENUM('admin', 'asn', 'admin_atk', 'admin_validasi_jp', 'asn2'),
       defaultValue: 'asn'
     },
     unit_kerja: {
