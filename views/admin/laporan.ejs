@@ -26,6 +26,9 @@
                 padding: 8px !important;
             }
             .stats-container { display: none !important; }
+            /* Force expand details on print if needed, or hide them */
+            .detail-row { display: table-row !important; } 
+            .btn-expand { display: none !important; }
         }
         .report-section {
             animation: fadeIn 0.3s ease-out;
@@ -40,6 +43,13 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             border-color: #22c55e; /* sipandi-green */
             background-color: #f0fdf4; /* green-50 */
+        }
+        /* Style untuk row detail */
+        .detail-row {
+            transition: all 0.3s ease;
+        }
+        .rotate-180 {
+            transform: rotate(180deg);
         }
     </style>
 </head>
@@ -224,7 +234,17 @@
                                 <h3 class="text-xl font-black text-gray-800 uppercase tracking-tight">Rekapitulasi Jam Pelajaran ASN</h3>
                                 <p id="period-text-jp" class="text-sm text-gray-500 italic">Periode: Semua Data</p>
                             </div>
-                            <div class="flex gap-2 no-print">
+                            
+                            <div class="flex items-center gap-2 no-print">
+                                <div class="bg-gray-100 p-1 rounded-lg flex mr-2">
+                                    <button onclick="sortJp('asc')" id="btn-sort-asc" class="px-3 py-1.5 rounded-md text-xs font-bold text-gray-600 hover:bg-white hover:shadow-sm transition-all" title="Urutkan JP Terkecil">
+                                        ▼ ASC
+                                    </button>
+                                    <button onclick="sortJp('desc')" id="btn-sort-desc" class="px-3 py-1.5 rounded-md text-xs font-bold text-white bg-sipandi-green-600 shadow-sm transition-all" title="Urutkan JP Terbesar">
+                                        ▲ DESC
+                                    </button>
+                                </div>
+
                                 <button onclick="exportToExcel('tableJp', 'Laporan_JP')" class="p-2.5 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-colors">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
@@ -233,18 +253,20 @@
                                 </button>
                             </div>
                         </div>
-                        <table id="tableJp" class="w-full text-sm">
-                            <thead class="bg-gray-50/50 text-gray-500 font-bold uppercase text-[10px] tracking-widest border-b border-gray-100">
-                                <tr>
-                                    <th class="px-8 py-4 text-left">Pegawai</th>
-                                    <th class="px-8 py-4 text-left">Sertifikat</th>
-                                    <th class="px-8 py-4 text-center">JP</th>
-                                    <th class="px-8 py-4 text-left">Periode</th>
-                                    <th class="px-8 py-4 text-left">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bodyJp" class="divide-y divide-gray-50"></tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table id="tableJp" class="w-full text-sm">
+                                <thead class="bg-gray-50/50 text-gray-500 font-bold uppercase text-[10px] tracking-widest border-b border-gray-100">
+                                    <tr>
+                                        <th class="px-8 py-4 text-left">Pegawai</th>
+                                        <th class="px-8 py-4 text-left">Unit Kerja</th>
+                                        <th class="px-8 py-4 text-center">Total JP (Disetujui)</th>
+                                        <th class="px-8 py-4 text-left">Status</th>
+                                        <th class="px-8 py-4 text-right no-print">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bodyJp" class="divide-y divide-gray-50"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -293,7 +315,8 @@
             users: []
         };
 
-        let currentStatusFilter = 'all'; // Menyimpan filter status aktif
+        let currentStatusFilter = 'all'; 
+        let currentJpSort = 'desc'; // Default sort JP descending (terbesar)
 
         const MONTH_NAMES = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -320,7 +343,7 @@
             if(role === 'admin') {
                 await loadUsers();
             }
-            applyFilters(); // Initial render
+            applyFilters(); 
         }
 
         function switchTab(tabName) {
@@ -346,7 +369,6 @@
         function filterStatus(status) {
             currentStatusFilter = status;
             
-            // Visual Update: Highlight active card
             ['all', 'disetujui', 'diajukan', 'ditolak'].forEach(s => {
                 const card = document.getElementById(`card-${s}`);
                 if (s === status) {
@@ -356,8 +378,43 @@
                 }
             });
 
-            // Re-apply filters to table
             applyFilters();
+        }
+
+        // --- SORT JP LOGIC ---
+        function sortJp(order) {
+            currentJpSort = order;
+            
+            // Update UI Button Style
+            const btnAsc = document.getElementById('btn-sort-asc');
+            const btnDesc = document.getElementById('btn-sort-desc');
+            
+            if (order === 'asc') {
+                btnAsc.classList.add('text-white', 'bg-sipandi-green-600', 'shadow-sm');
+                btnAsc.classList.remove('text-gray-600', 'hover:bg-white');
+                btnDesc.classList.remove('text-white', 'bg-sipandi-green-600', 'shadow-sm');
+                btnDesc.classList.add('text-gray-600', 'hover:bg-white');
+            } else {
+                btnDesc.classList.add('text-white', 'bg-sipandi-green-600', 'shadow-sm');
+                btnDesc.classList.remove('text-gray-600', 'hover:bg-white');
+                btnAsc.classList.remove('text-white', 'bg-sipandi-green-600', 'shadow-sm');
+                btnAsc.classList.add('text-gray-600', 'hover:bg-white');
+            }
+
+            applyFilters(); // Re-render table with new sort order
+        }
+
+        function toggleJpDetail(nip) {
+            const detailRow = document.getElementById(`detail-row-${nip}`);
+            const icon = document.getElementById(`icon-expand-${nip}`);
+            
+            if (detailRow.classList.contains('hidden')) {
+                detailRow.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                detailRow.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
         }
 
         // --- FETCH LOGIC ---
@@ -410,8 +467,6 @@
         function renderFilteredPengajuan(m, y) {
             const tbody = document.getElementById('bodyPengajuan');
             
-            // Calculate Total Stats (Before Filtering by Status, But After Date)
-            // Ini agar angka di kartu tetap menunjukkan total berdasarkan periode, bukan 0 jika di filter
             const dateFiltered = masterData.pengajuan.filter(p => {
                 const date = new Date(p.tanggal_pengajuan);
                 const matchM = m === 'all' || date.getMonth().toString() === m;
@@ -419,13 +474,11 @@
                 return matchM && matchY;
             });
 
-            // Update Stats Card Numbers
             document.getElementById('stat-total-pengajuan').innerText = dateFiltered.length;
             document.getElementById('stat-acc-pengajuan').innerText = dateFiltered.filter(p => p.status === 'disetujui').length;
             document.getElementById('stat-pending-pengajuan').innerText = dateFiltered.filter(p => p.status === 'diajukan').length;
             document.getElementById('stat-rejected-pengajuan').innerText = dateFiltered.filter(p => p.status === 'ditolak').length;
 
-            // Apply Status Filter for Table Display
             const finalFiltered = dateFiltered.filter(p => {
                 if (currentStatusFilter === 'all') return true;
                 return p.status === currentStatusFilter;
@@ -449,24 +502,113 @@
 
         function renderFilteredJp(m, y) {
             const tbody = document.getElementById('bodyJp');
-            const filtered = masterData.jp.filter(s => {
+            
+            // 1. Filter by Date first
+            const dateFiltered = masterData.jp.filter(s => {
                 const matchM = m === 'all' || s.bulan === MONTH_NAMES[parseInt(m)];
                 const matchY = y === 'all' || s.tahun.toString() === y;
                 return matchM && matchY;
             });
 
-            tbody.innerHTML = filtered.map(s => {
-                let jpStatusClass = s.status === 'diterima' || s.status === 'disetujui' ? "bg-green-100 text-green-700" : (s.status === 'ditolak' ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700");
-                return `
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-8 py-4"><span class="font-bold text-gray-800">${s.user.nama}</span><br><span class="text-xs text-gray-400 font-mono">${s.user.nip}</span></td>
-                        <td class="px-8 py-4 text-gray-600 font-medium">${s.nama_sertif}</td>
-                        <td class="px-8 py-4 text-center font-black text-sipandi-green-600">${s.jumlah_jp}</td>
-                        <td class="px-8 py-4 text-gray-500 text-xs">${s.bulan} ${s.tahun}</td>
-                        <td class="px-8 py-4"><span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${jpStatusClass}">${s.status}</span></td>
+            // 2. Group by NIP
+            const grouped = {};
+            dateFiltered.forEach(item => {
+                const nip = item.user.nip;
+                if (!grouped[nip]) {
+                    grouped[nip] = {
+                        user: item.user,
+                        totalJp: 0,
+                        items: []
+                    };
+                }
+                
+                // Add to details list
+                grouped[nip].items.push(item);
+                
+                // Calculate Total JP (Only Approved/Received counts towards official total usually, 
+                // but let's count 'disetujui'/'diterima' for logic)
+                if (item.status === 'disetujui' || item.status === 'diterima') {
+                    grouped[nip].totalJp += item.jumlah_jp;
+                }
+            });
+
+            // 3. Convert to Array and Sort
+            let groupedArray = Object.values(grouped);
+            
+            if (currentJpSort === 'asc') {
+                groupedArray.sort((a, b) => a.totalJp - b.totalJp);
+            } else {
+                groupedArray.sort((a, b) => b.totalJp - a.totalJp);
+            }
+
+            // 4. Render
+            if (groupedArray.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data untuk periode ini</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = groupedArray.map(group => {
+                const nip = group.user.nip;
+                const isTargetMet = group.totalJp >= 20;
+                
+                const statusHtml = isTargetMet 
+                    ? '<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-green-100 text-green-700">Terpenuhi (>20 JP)</span>'
+                    : '<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-red-100 text-red-700">Belum Terpenuhi</span>';
+
+                // Parent Row
+                let html = `
+                    <tr class="hover:bg-gray-50 transition-colors border-b border-gray-100">
+                        <td class="px-8 py-4">
+                            <span class="font-bold text-gray-800">${group.user.nama}</span><br>
+                            <span class="text-xs text-gray-400 font-mono">${group.user.nip}</span>
+                        </td>
+                        <td class="px-8 py-4 text-gray-600 text-xs">${group.user.unit_kerja || '-'}</td>
+                        <td class="px-8 py-4 text-center">
+                            <span class="text-lg font-black ${isTargetMet ? 'text-green-600' : 'text-red-600'}">${group.totalJp} JP</span>
+                        </td>
+                        <td class="px-8 py-4">${statusHtml}</td>
+                        <td class="px-8 py-4 text-right no-print">
+                            <button onclick="toggleJpDetail('${nip}')" class="text-gray-400 hover:text-blue-600 transition-transform duration-200 btn-expand">
+                                <svg id="icon-expand-${nip}" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </td>
                     </tr>
                 `;
-            }).join('') || '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data untuk periode ini</td></tr>';
+
+                // Child Row (Details)
+                html += `
+                    <tr id="detail-row-${nip}" class="hidden detail-row bg-gray-50">
+                        <td colspan="5" class="px-8 py-4">
+                            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                                <table class="w-full text-xs">
+                                    <thead class="bg-gray-100 text-gray-500">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left">Nama Sertifikat</th>
+                                            <th class="px-4 py-2 text-center">JP</th>
+                                            <th class="px-4 py-2 text-left">Periode</th>
+                                            <th class="px-4 py-2 text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                                        ${group.items.map(item => {
+                                            let badgeColor = item.status === 'disetujui' ? 'text-green-600' : (item.status === 'ditolak' ? 'text-red-600' : 'text-yellow-600');
+                                            return `
+                                                <tr>
+                                                    <td class="px-4 py-2 font-medium text-gray-700">${item.nama_sertif}</td>
+                                                    <td class="px-4 py-2 text-center font-bold">${item.jumlah_jp}</td>
+                                                    <td class="px-4 py-2 text-gray-500">${item.bulan} ${item.tahun}</td>
+                                                    <td class="px-4 py-2 text-center font-bold uppercase ${badgeColor}">${item.status}</td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return html;
+            }).join('');
         }
 
         function renderStok() {
@@ -518,11 +660,30 @@
             const table = document.getElementById(tableId);
             let csv = [];
             const rows = table.querySelectorAll("tr");
+            
+            // Loop through rows, BUT skip detail rows (which contain nested tables) to prevent garbage in CSV
+            // We only want the parent rows for a summary CSV, OR we could flatten it. 
+            // For simplicity and cleaner CSV, let's stick to the main visible rows unless it's a simple table.
+            
             for (let i = 0; i < rows.length; i++) {
+                // If it's a detail row (hidden/accordion), skip it to avoid duplication or nested table mess
+                if (rows[i].classList.contains('detail-row')) continue;
+
                 let row = [], cols = rows[i].querySelectorAll("td, th");
-                for (let j = 0; j < cols.length; j++) row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
-                csv.push(row.join(","));
+                
+                // Only take columns that are NOT the expand button column (last one usually)
+                // In tableJp, the last column is 'Aksi' which is index 4.
+                
+                for (let j = 0; j < cols.length; j++) {
+                    // Skip Aksi column content
+                    if (cols[j].innerText.trim() === 'Aksi' || cols[j].querySelector('button')) continue;
+                    
+                    row.push('"' + cols[j].innerText.replace(/"/g, '""').replace(/\n/g, ' ') + '"');
+                }
+                
+                if (row.length > 0) csv.push(row.join(","));
             }
+            
             const blob = new Blob([csv.join("\n")], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
@@ -536,175 +697,3 @@
     </script>
 </body>
 </html>
-
-### 2. `views/partials/sidebaradmin.ejs`
-Saya memperbarui logika tautan "Laporan Rekapitulasi". Jika yang login adalah **Admin Validasi JP**, tautan akan otomatis memiliki query `?tab=jp`. Jika **Admin ATK**, maka `?tab=pengajuan`.
-
-```ejs
-<aside
-    class="bg-sipandi-green-800 text-white w-64 min-h-screen flex flex-col shadow-xl transition-all duration-300 hidden md:flex">
-    <div class="p-6 flex items-center space-x-3 border-b border-sipandi-green-700">
-        <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-10 h-10 rounded-full border-2 border-white">
-        <div>
-            <h1 class="text-xl font-bold tracking-wider">SIPANDI</h1>
-            <p class="text-xs text-sipandi-green-200">Biro Organisasi</p>
-        </div>
-    </div>
-
-    <nav class="flex-1 py-6 overflow-y-auto">
-        <ul class="space-y-2 px-4">
-
-            <li>
-                <% 
-                    let dashboardHref = "/admin/dashboard"; // Default Admin Utama
-                    if (user.role === 'admin_atk') dashboardHref = "/admin/pengajuan";
-                    if (user.role === 'admin_validasi_jp') dashboardHref = "/admin/jp";
-                %>
-                <a href="<%= dashboardHref %>"
-                    class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
-                    <%= (page === 'dashboard' || page === 'pengajuan' || page === 'jp') ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
-                        </path>
-                    </svg>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-
-            <% if (user.role === 'admin' || user.role === 'admin_atk') { %>
-                <li>
-                    <a href="/admin/inventory"
-                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
-                        <%= page === 'inventory' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10l8 4M9 7l8 4"></path>
-                        </svg>
-                        <span>Manajemen Barang</span>
-                    </a>
-                </li>
-
-                <% if (user.role === 'admin') { %>
-                <li>
-                    <a href="/admin/pengajuan"
-                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
-                        <%= page === 'pengajuan' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
-                            </path>
-                        </svg>
-                        <span>Kelola Pengajuan</span>
-                    </a>
-                </li>
-                <% } %>
-            <% } %>
-
-            <% if (user.role === 'admin' || user.role === 'admin_validasi_jp') { %>
-                <% if (user.role === 'admin') { %>
-                <li>
-                    <a href="/admin/jp"
-                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
-                        <%= page === 'jp' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
-                        <span>Kelola JP</span>
-                    </a>
-                </li>
-                <% } %>
-            <% } %>
-
-            <% if (user.role === 'admin') { %>
-                <li>
-                    <a href="/admin/users"
-                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
-                        <%= page === 'users' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                            </path>
-                        </svg>
-                        <span>Manajemen Pengguna</span>
-                    </a>
-                </li>
-            <% } %>
-
-            <li>
-                <% 
-                    // LOGIKA BARU: Link Laporan berdasarkan Role
-                    let laporanLink = '/admin/laporan';
-                    if(user.role === 'admin_validasi_jp') {
-                        laporanLink += '?tab=jp';
-                    } else if (user.role === 'admin_atk') {
-                        laporanLink += '?tab=pengajuan';
-                    }
-                    // Admin utama defaultnya tetap pengajuan atau bisa diset manual
-                %>
-                <a href="<%= laporanLink %>"
-                    class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
-                    <%= page === 'laporan' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span>Laporan Rekapitulasi</span>
-                </a>
-            </li>
-
-        </ul>
-    </nav>
-
-    <div class="p-4 border-t border-sipandi-green-700">
-        <a href="#" onclick="confirmLogout(event)"
-            class="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-200 hover:bg-red-600 hover:text-white transition-colors duration-200">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                </path>
-            </svg>
-            <span>Logout</span>
-        </a>
-    </div>
-</aside>
-
-<script src="[https://cdn.jsdelivr.net/npm/sweetalert2@11](https://cdn.jsdelivr.net/npm/sweetalert2@11)"></script>
-<script>
-    function confirmLogout(e) {
-        e.preventDefault();
-        Swal.fire({
-            title: 'Yakin ingin logout?',
-            text: "Anda harus login kembali untuk mengakses sistem",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Logout',
-            cancelButtonText: 'Batal',
-            buttonsStyling: false,
-            customClass: {
-                popup: 'rounded-xl font-sans',
-                title: 'text-lg font-bold text-gray-800',
-                htmlContainer: 'text-gray-600',
-                confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors mx-1 focus:ring-2 focus:ring-red-500 focus:ring-offset-1',
-                cancelButton: 'bg-gray-200 hover:bg-gray-300 text-gray-800 px-5 py-2.5 rounded-lg font-medium transition-colors mx-1 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Logout Berhasil!',
-                    text: 'Mengeluarkan anda dari sistem...',
-                    icon: 'success',
-                    timer: 1500,
-                    showConfirmButton: false,
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: 'rounded-2xl font-sans'
-                    }
-                }).then(() => {
-                    window.location.href = '/logout';
-                });
-            }
-        });
-    }
-</script>
