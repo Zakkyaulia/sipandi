@@ -8,9 +8,15 @@
     <link rel="stylesheet" href="/css/output.css">
     <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Animasi halus untuk progress bar */
+        .progress-fill {
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-gray-50 font-sans antialiased">
     <div class="flex h-screen overflow-hidden">
 
         <%- include('../partials/sidebar', { page: 'dashboard' }) %>
@@ -21,17 +27,49 @@
 
             <main class="w-full flex-grow p-6">
 
+                <div id="jpTargetSection" class="hidden mb-8">
+                    <div id="jpCard" class="relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all duration-300">
+                        
+                        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                            
+                            <div class="flex-1 w-full text-center">
+                                <div class="flex items-center justify-center gap-3 mb-2">
+                                    <div id="statusIconContainer" class="p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm">
+                                        </div>
+                                    <div>
+                                        <h3 id="statusTitle" class="text-lg font-bold text-gray-800">Memuat Data...</h3>
+                                    </div>
+                                </div>
+                                
+                                <p id="statusDesc" class="text-sm text-gray-600 mb-4">
+                                    Menghitung total capaian JP anda...
+                                </p>
+                                
+                                <div class="w-full bg-gray-200 rounded-full h-4 mb-2 overflow-hidden border border-black/5">
+                                    <div id="progressBar" class="progress-fill h-full rounded-full" style="width: 0%">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-between text-xs font-bold text-gray-500 px-1">
+                                    <span>0 JP</span>
+                                    <span id="currentProgressText">0 / 20 JP</span>
+                                    <span>Target: 20 JP</span>
+                                </div>
+                            </div>
+
+                            <div id="actionContainer" class="flex-shrink-0">
+                                </div>
+
+                        </div>
+
+                        <div class="absolute -right-6 -top-12 w-48 h-48 bg-white opacity-40 rounded-full blur-3xl pointer-events-none"></div>
+                    </div>
+                </div>
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
                         <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, <%= user.nama || user.name %>!</h2>
                         <p class="text-gray-600">Dashboard pengelolaan bukti keaktifan dan JP.</p>
                     </div>
-                    <button onclick="toggleModal()" class="bg-sipandi-green-600 hover:bg-sipandi-green-700 text-white px-6 py-3 rounded-xl font-semibold transition shadow-lg hover:shadow-green-200 flex items-center gap-2 transform hover:-translate-y-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                        </svg>
-                        Tambah Bukti
-                    </button>
                 </div>
 
                 <div class="card bg-gradient-to-r from-sipandi-green-600 to-sipandi-green-800 text-white shadow-xl shadow-green-100 rounded-2xl mb-8 p-8 relative overflow-hidden">
@@ -85,14 +123,16 @@
                                 </tr>
                             </thead>
                             <tbody id="keaktifanBody" class="divide-y divide-gray-100 bg-white">
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="card bg-white shadow-sm border border-gray-100 rounded-2xl p-8">
                     <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-sipandi-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <svg class="w-5 h-5 text-sipandi-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
                         Data Diri
                     </h3>
                     <div class="space-y-4 text-sm">
@@ -121,125 +161,125 @@
         </div>
     </div>
 
-<div id="modalBukti" style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" class="hidden fixed inset-0 bg-gray-900/40 z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-    
-    <div style="width: 100%; max-width: 1000px; max-height: 90vh; display: flex; flex-direction: column;" class="bg-white rounded-2xl shadow-2xl transform transition-all scale-100">
+    <div id="modalBukti" style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" class="hidden fixed inset-0 bg-gray-900/40 z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         
-        <div class="flex-none px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 rounded-t-2xl">
-            <div>
-                <h3 class="text-xl font-bold text-gray-800">Tambah Bukti</h3>
-                <p class="text-sm text-gray-500 mt-1">Upload dokumen pendukung</p>
+        <div style="width: 100%; max-width: 1000px; max-height: 90vh; display: flex; flex-direction: column;" class="bg-white rounded-2xl shadow-2xl transform transition-all scale-100">
+            
+            <div class="flex-none px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 rounded-t-2xl">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">Tambah Bukti</h3>
+                    <p class="text-sm text-gray-500 mt-1">Upload dokumen pendukung</p>
+                </div>
+                <button onclick="toggleModal()" class="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
-            <button onclick="toggleModal()" class="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-        
-        <form id="formUpload" class="flex flex-col flex-grow overflow-hidden">
-            <div class="flex-grow overflow-y-auto p-6 space-y-5">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="space-y-2"> 
-                        <label class="block text-sm font-semibold text-gray-700">Bulan</label>
-                        <div class="relative">
-                            <select name="bulan" id="bulan" required
-                                class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-sipandi-green-500 focus:border-sipandi-green-500 block transition-all outline-none appearance-none">
-                                <option value="" disabled selected>Pilih Bulan</option>
-                                <option value="Januari">Januari</option>
-                                <option value="Februari">Februari</option>
-                                <option value="Maret">Maret</option>
-                                <option value="April">April</option>
-                                <option value="Mei">Mei</option>
-                                <option value="Juni">Juni</option>
-                                <option value="Juli">Juli</option>
-                                <option value="Agustus">Agustus</option>
-                                <option value="September">September</option>
-                                <option value="Oktober">Oktober</option>
-                                <option value="November">November</option>
-                                <option value="Desember">Desember</option>
-                            </select>
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            
+            <form id="formUpload" class="flex flex-col flex-grow overflow-hidden">
+                <div class="flex-grow overflow-y-auto p-6 space-y-5">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-2"> 
+                            <label class="block text-sm font-semibold text-gray-700">Bulan</label>
+                            <div class="relative">
+                                <select name="bulan" id="bulan" required
+                                    class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-sipandi-green-500 focus:border-sipandi-green-500 block transition-all outline-none appearance-none">
+                                    <option value="" disabled selected>Pilih Bulan</option>
+                                    <option value="Januari">Januari</option>
+                                    <option value="Februari">Februari</option>
+                                    <option value="Maret">Maret</option>
+                                    <option value="April">April</option>
+                                    <option value="Mei">Mei</option>
+                                    <option value="Juni">Juni</option>
+                                    <option value="Juli">Juli</option>
+                                    <option value="Agustus">Agustus</option>
+                                    <option value="September">September</option>
+                                    <option value="Oktober">Oktober</option>
+                                    <option value="November">November</option>
+                                    <option value="Desember">Desember</option>
+                                </select>
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-semibold text-gray-700">Tahun</label>
+                            <div class="relative">
+                                <input type="number" name="tahun" id="tahun" required min="2020" max="2030" value="<%= new Date().getFullYear() %>"
+                                    class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-sipandi-green-500 focus:border-sipandi-green-500 block transition-all outline-none">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="space-y-2">
-                        <label class="block text-sm font-semibold text-gray-700">Tahun</label>
+                        <label class="block text-sm font-semibold text-gray-700 flex justify-between">
+                            <span>Jam Pelajaran (JP)</span>
+                        </label>
                         <div class="relative">
-                            <input type="number" name="tahun" id="tahun" required min="2020" max="2030" value="<%= new Date().getFullYear() %>"
+                            <input type="number" name="jp" id="jpInput" min="1" placeholder="Contoh: 20" required 
                                 class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-sipandi-green-500 focus:border-sipandi-green-500 block transition-all outline-none">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-gray-700 flex justify-between">
-                        <span>Jam Pelajaran (JP)</span>
-                    </label>
-                    <div class="relative">
-                        <input type="number" name="jp" id="jpInput" min="1" placeholder="Contoh: 20" required 
-                            class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-sipandi-green-500 focus:border-sipandi-green-500 block transition-all outline-none">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-gray-700">Dokumen Bukti</label>
-                    
-                    <div class="relative w-full">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-gray-700">Dokumen Bukti</label>
                         
-                        <div id="uploadPlaceholder" class="transition-all duration-300">
-                            <label for="files" style="height: 160px;" class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-sipandi-green-500 transition-all group">
-                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <svg class="w-8 h-8 mb-3 text-gray-400 group-hover:text-sipandi-green-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                    <p class="mb-1 text-sm text-gray-500"><span class="font-semibold text-sipandi-green-600">Klik untuk Upload</span></p>
-                                    <p class="text-xs text-gray-400">PDF/JPG (Max 20MB)</p>
-                                </div>
-                            </label>
-                        </div>
-
-                        <div id="filePreview" class="hidden transition-all duration-300">
-                            <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl">
-                                <div class="flex items-center gap-3 overflow-hidden">
-                                    <div class="bg-white p-2 rounded-lg text-sipandi-green-600 shadow-sm">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <div class="relative w-full">
+                            
+                            <div id="uploadPlaceholder" class="transition-all duration-300">
+                                <label for="files" style="height: 160px;" class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-sipandi-green-500 transition-all group">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg class="w-8 h-8 mb-3 text-gray-400 group-hover:text-sipandi-green-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                        <p class="mb-1 text-sm text-gray-500"><span class="font-semibold text-sipandi-green-600">Klik untuk Upload</span></p>
+                                        <p class="text-xs text-gray-400">PDF/JPG (Max 20MB)</p>
                                     </div>
-                                    <div class="flex flex-col">
-                                        <span id="fileNameText" class="text-sm font-semibold text-gray-800 truncate max-w-[200px] md:max-w-xs">filename.pdf</span>
-                                        <span id="fileSizeText" class="text-xs text-gray-500">0 MB</span>
-                                    </div>
-                                </div>
-                                <button type="button" onclick="removeFile()" class="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all" title="Hapus File">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
+                                </label>
                             </div>
-                        </div>
 
-                        <input id="files" name="files" type="file" class="hidden" required onchange="handleFileSelect(this)" accept=".pdf,.jpg,.jpeg,.png" />
+                            <div id="filePreview" class="hidden transition-all duration-300">
+                                <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl">
+                                    <div class="flex items-center gap-3 overflow-hidden">
+                                        <div class="bg-white p-2 rounded-lg text-sipandi-green-600 shadow-sm">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span id="fileNameText" class="text-sm font-semibold text-gray-800 truncate max-w-[200px] md:max-w-xs">filename.pdf</span>
+                                            <span id="fileSizeText" class="text-xs text-gray-500">0 MB</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="removeFile()" class="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all" title="Hapus File">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <input id="files" name="files" type="file" class="hidden" required onchange="handleFileSelect(this)" accept=".pdf,.jpg,.jpeg,.png" />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="flex-none p-6 pt-2 bg-white rounded-b-2xl z-10">
-                <div class="flex gap-3">
-                    <button type="button" onclick="toggleModal()" style="height: 50px;" class="flex-1 flex items-center justify-center border border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 hover:text-gray-900 transition-all focus:ring-4 focus:ring-gray-100">
-                        Batal
-                    </button>
-                    
-                    <button type="submit" style="height: 50px;" class="flex-1 flex items-center justify-center bg-sipandi-green-600 text-white rounded-xl font-semibold hover:bg-sipandi-green-700 hover:shadow-lg hover:-translate-y-0.5 transition-all focus:ring-4 focus:ring-green-300">
-                        Simpan
-                    </button>
+                <div class="flex-none p-6 pt-2 bg-white rounded-b-2xl z-10">
+                    <div class="flex gap-3">
+                        <button type="button" onclick="toggleModal()" style="height: 50px;" class="flex-1 flex items-center justify-center border border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 hover:text-gray-900 transition-all focus:ring-4 focus:ring-gray-100">
+                            Batal
+                        </button>
+                        
+                        <button type="submit" style="height: 50px;" class="flex-1 flex items-center justify-center bg-sipandi-green-600 text-white rounded-xl font-semibold hover:bg-sipandi-green-700 hover:shadow-lg hover:-translate-y-0.5 transition-all focus:ring-4 focus:ring-green-300">
+                            Simpan
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
     <script>
         // Load data saat halaman dibuka
@@ -249,56 +289,57 @@
 
         // Toggle Modal Visibility
         function toggleModal() {
-        const modal = document.getElementById('modalBukti');
-        modal.classList.toggle('hidden');
-        if (modal.classList.contains('hidden')) {
-            document.getElementById('formUpload').reset();
-            removeFile(); // Reset tampilan file ke awal
-        }
-    }
-
-    // Fungsi saat file dipilih
-    function handleFileSelect(input) {
-        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-        const filePreview = document.getElementById('filePreview');
-        const fileNameText = document.getElementById('fileNameText');
-        const fileSizeText = document.getElementById('fileSizeText');
-        
-        if (input.files && input.files[0]) {
-            const file = input.files[0];
-            const fileSizeMB = file.size / (1024 * 1024);
-            const maxSizeMB = 20;
-
-            // Validasi Ukuran
-            if (fileSizeMB > maxSizeMB) {
-                Swal.fire('File Terlalu Besar', `Ukuran file maks ${maxSizeMB}MB. File anda: ${fileSizeMB.toFixed(2)}MB`, 'warning');
-                removeFile(); // Reset jika gagal
-                return;
+            const modal = document.getElementById('modalBukti');
+            modal.classList.toggle('hidden');
+            if (modal.classList.contains('hidden')) {
+                document.getElementById('formUpload').reset();
+                removeFile(); // Reset tampilan file ke awal
             }
-
-            // Update Teks
-            fileNameText.textContent = file.name;
-            fileSizeText.textContent = fileSizeMB.toFixed(2) + ' MB';
-
-            // Swap Tampilan: Sembunyikan Kotak Upload, Munculkan Preview
-            uploadPlaceholder.classList.add('hidden');
-            filePreview.classList.remove('hidden');
         }
-    }
 
-    // Fungsi untuk menghapus file yang sudah dipilih
-    function removeFile() {
-        const input = document.getElementById('files');
-        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-        const filePreview = document.getElementById('filePreview');
+        // Fungsi saat file dipilih
+        function handleFileSelect(input) {
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+            const filePreview = document.getElementById('filePreview');
+            const fileNameText = document.getElementById('fileNameText');
+            const fileSizeText = document.getElementById('fileSizeText');
+            
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileSizeMB = file.size / (1024 * 1024);
+                const maxSizeMB = 20;
 
-        // Reset Input Value
-        input.value = '';
+                // Validasi Ukuran
+                if (fileSizeMB > maxSizeMB) {
+                    Swal.fire('File Terlalu Besar', `Ukuran file maks ${maxSizeMB}MB. File anda: ${fileSizeMB.toFixed(2)}MB`, 'warning');
+                    removeFile(); // Reset jika gagal
+                    return;
+                }
 
-        // Swap Tampilan: Munculkan Kotak Upload, Sembunyikan Preview
-        uploadPlaceholder.classList.remove('hidden');
-        filePreview.classList.add('hidden');
-    }
+                // Update Teks
+                fileNameText.textContent = file.name;
+                fileSizeText.textContent = fileSizeMB.toFixed(2) + ' MB';
+
+                // Swap Tampilan: Sembunyikan Kotak Upload, Munculkan Preview
+                uploadPlaceholder.classList.add('hidden');
+                filePreview.classList.remove('hidden');
+            }
+        }
+
+        // Fungsi untuk menghapus file yang sudah dipilih
+        function removeFile() {
+            const input = document.getElementById('files');
+            const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+            const filePreview = document.getElementById('filePreview');
+
+            // Reset Input Value
+            input.value = '';
+
+            // Swap Tampilan: Munculkan Kotak Upload, Sembunyikan Preview
+            uploadPlaceholder.classList.remove('hidden');
+            filePreview.classList.add('hidden');
+        }
+
         // Fetch Data dari API
         async function loadData() {
             try {
@@ -318,71 +359,176 @@
 
                 if (data.length === 0) {
                     body.innerHTML = `<tr><td colspan="4" class="px-8 py-10 text-center text-gray-400 italic bg-white">Belum ada data bukti kegiatan.</td></tr>`;
-                    totalCountDisplay.innerText = 0;
-                    totalJPDisplay.innerText = 0;
-                    return;
+                } else {
+                    data.forEach(item => {
+                        const status = item.status || 'pending';
+
+                        if (status !== 'ditolak') {
+                            sumJP += parseInt(item.jumlah_jp || 0);
+                            validSertifCount++;
+                        }
+
+                        const periode = `${item.bulan || '-'} ${item.tahun || ''}`;
+
+                        let statusBadge = '';
+                        let rowClass = '';
+
+                        if (status === 'diterima' || status === 'disetujui') {
+                            statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800 uppercase border border-green-200">Valid</span>';
+                        } else if (status === 'pending') {
+                            statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 uppercase border border-yellow-200">Menunggu</span>';
+                        } else {
+                            statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 uppercase border border-red-200">Ditolak</span>';
+                            rowClass = 'opacity-60 bg-gray-50';
+                        }
+
+                        body.innerHTML += `
+                            <tr class="hover:bg-gray-50 transition-colors ${rowClass} border-b border-gray-50 last:border-b-0">
+                                <td class="px-8 py-5">
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="text-gray-900 font-bold">${item.nama_sertif}</span>
+                                            ${statusBadge}
+                                        </div>
+                                        ${item.file_sertif ? 
+                                            `<a href="/uploads/sertifikat/${item.file_sertif.split('/').pop()}" target="_blank" class="text-xs text-sipandi-green-600 hover:text-sipandi-green-800 hover:underline flex items-center gap-1 font-medium mt-1">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                                                Lihat File
+                                            </a>` : 
+                                            '<span class="text-xs text-gray-400 italic flex items-center gap-1 mt-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Tidak ada file</span>'}
+                                    </div>
+                                </td>
+                                <td class="px-8 py-5 text-gray-600 text-sm">
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        ${periode}
+                                    </div>
+                                </td>
+                                <td class="px-8 py-5">
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="font-bold text-gray-900">${status === 'ditolak' ? '<span class="line-through text-gray-400">' + item.jumlah_jp + ' JP</span>' : item.jumlah_jp + ' JP'}</span>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-5 text-right">
+                                    <button onclick="deleteData(${item.id_validasiJp})" class="text-gray-400 hover:text-red-600 font-medium text-sm hover:bg-red-50 p-2 rounded-lg transition-all" title="Hapus Data">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </td>
+                            </tr>`;
+                    });
                 }
 
-                data.forEach(item => {
-                    const status = item.status || 'pending';
-
-                    if (status !== 'ditolak') {
-                        sumJP += parseInt(item.jumlah_jp || 0);
-                        validSertifCount++;
-                    }
-
-                    const periode = `${item.bulan || '-'} ${item.tahun || ''}`;
-
-                    let statusBadge = '';
-                    let rowClass = '';
-
-                    if (status === 'diterima' || status === 'disetujui') {
-                        statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800 uppercase border border-green-200">Valid</span>';
-                    } else if (status === 'pending') {
-                        statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 uppercase border border-yellow-200">Menunggu</span>';
-                    } else {
-                        statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 uppercase border border-red-200">Ditolak</span>';
-                        rowClass = 'opacity-60 bg-gray-50';
-                    }
-
-                    body.innerHTML += `
-                        <tr class="hover:bg-gray-50 transition-colors ${rowClass} border-b border-gray-50 last:border-b-0">
-                            <td class="px-8 py-5">
-                                <div class="flex flex-col">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="text-gray-900 font-bold">${item.nama_sertif}</span>
-                                        ${statusBadge}
-                                    </div>
-                                    ${item.file_sertif ? 
-                                        `<a href="/uploads/${item.file_sertif}" target="_blank" class="text-xs text-sipandi-green-600 hover:text-sipandi-green-800 hover:underline flex items-center gap-1 font-medium mt-1">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                                            Lihat File
-                                        </a>` : 
-                                        '<span class="text-xs text-gray-400 italic flex items-center gap-1 mt-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Tidak ada file</span>'}
-                                </div>
-                            </td>
-                            <td class="px-8 py-5 text-gray-600 text-sm">
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    ${periode}
-                                </div>
-                            </td>
-                            <td class="px-8 py-5">
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span class="font-bold text-gray-900">${status === 'ditolak' ? '<span class="line-through text-gray-400">' + item.jumlah_jp + ' JP</span>' : item.jumlah_jp + ' JP'}</span>
-                                </div>
-                            </td>
-                            <td class="px-8 py-5 text-right">
-                                <button onclick="deleteData(${item.id_validasiJp})" class="text-gray-400 hover:text-red-600 font-medium text-sm hover:bg-red-50 p-2 rounded-lg transition-all" title="Hapus Data">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                            </td>
-                        </tr>`;
-                });
-
+                // Update Counters UI
                 totalCountDisplay.innerText = validSertifCount;
                 totalJPDisplay.innerText = sumJP;
+
+                // ============================================
+                // LOGIKA WARNING & PROGRESS BAR (DINAMIS)
+                // ============================================
+                const userRole = "<%= user.role %>"; 
+                const targetJP = 20;
+                
+                // Elemen DOM
+                const jpSection = document.getElementById('jpTargetSection');
+                const jpCard = document.getElementById('jpCard');
+                const statusTitle = document.getElementById('statusTitle');
+                const statusDesc = document.getElementById('statusDesc');
+                const statusIconContainer = document.getElementById('statusIconContainer');
+                const progressBar = document.getElementById('progressBar');
+                const progressText = document.getElementById('currentProgressText');
+                const actionContainer = document.getElementById('actionContainer');
+
+                // Hanya jalankan jika role ASN atau ASN2
+                if(['asn', 'asn2'].includes(userRole)) {
+                    jpSection.classList.remove('hidden'); // Tampilkan section
+
+                    // Hitung Persentase (Max 100%)
+                    let percentage = Math.min((sumJP / targetJP) * 100, 100);
+                    
+                    // Update Text Progress
+                    progressText.innerText = `${sumJP} / ${targetJP} JP`;
+
+                    // Set Width dengan sedikit delay agar animasi CSS jalan
+                    setTimeout(() => {
+                        progressBar.style.width = `${percentage}%`;
+                    }, 100);
+
+                    if (sumJP === 0) {
+                        // === STATE: CRITICAL (0 JP) ===
+                        
+                        // Styling Card Critical (Red)
+                        jpCard.className = "relative overflow-hidden rounded-2xl shadow-sm border border-red-200 p-6 transition-all duration-300 bg-gradient-to-br from-red-50 via-pink-50 to-white text-red-900";
+                        
+                        // Icon Critical
+                        statusIconContainer.innerHTML = `<svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+                        
+                        // Texts
+                        statusTitle.innerText = "Belum Ada Capaian JP";
+                        statusDesc.innerHTML = `Capaian Anda masih <strong class="text-red-700">0 JP</strong>. Mohon segera input bukti kegiatan.`;
+                        
+                        // Bar Color (Red)
+                        progressBar.className = "progress-fill h-full rounded-full bg-red-500 shadow-sm";
+
+                        // Single Button: Upload Bukti -> Redirect
+                        actionContainer.innerHTML = `
+                            <a href="/submit-jp" class="inline-flex items-center px-6 py-3 bg-white border border-red-200 rounded-xl shadow-sm text-red-700 font-bold hover:bg-red-600 hover:text-white hover:border-transparent transition-all">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                Upload Bukti
+                            </a>
+                        `;
+
+                    } else if (sumJP < targetJP) {
+                        // === STATE: WARNING (BELUM TERCAPAI) ===
+                        const kekurangan = targetJP - sumJP;
+                        
+                        // Styling Card Warning (Gradient Kuning/Orange)
+                        jpCard.className = "relative overflow-hidden rounded-2xl shadow-sm border border-orange-200 p-6 transition-all duration-300 bg-gradient-to-br from-orange-50 via-amber-50 to-white text-orange-900";
+                        
+                        // Icon Warning
+                        statusIconContainer.innerHTML = `<svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+                        
+                        // Texts
+                        statusTitle.innerText = "Target JP Belum Tercapai";
+                        statusDesc.innerHTML = `Anda masih kekurangan <strong class="text-orange-700">${kekurangan} JP</strong> lagi.`;
+                        
+                        // Bar Color (Orange/Yellow)
+                        progressBar.className = "progress-fill h-full rounded-full bg-orange-500 shadow-sm";
+
+                        // Single Button: Upload Bukti -> Redirect
+                        actionContainer.innerHTML = `
+                            <a href="/submit-jp" class="inline-flex items-center px-6 py-3 bg-white border border-orange-200 rounded-xl shadow-sm text-orange-700 font-bold hover:bg-orange-600 hover:text-white hover:border-transparent transition-all">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                Upload Bukti
+                            </a>
+                        `;
+
+                    } else {
+                        // === STATE: TERCAPAI (SUCCESS) ===
+                        
+                        // Styling Card Success (Gradient Hijau/Teal)
+                        jpCard.className = "relative overflow-hidden rounded-2xl shadow-sm border border-green-200 p-6 transition-all duration-300 bg-gradient-to-br from-emerald-50 via-green-50 to-white text-emerald-900";
+                        
+                        // Icon Success
+                        statusIconContainer.innerHTML = `<svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+                        
+                        // Texts
+                        statusTitle.innerText = "Selamat! Target JP Tercapai";
+                        statusDesc.innerText = "Anda telah memenuhi target minimal 20 JP.";
+                        
+                        // Bar Color (Green/Emerald)
+                        progressBar.className = "progress-fill h-full rounded-full bg-emerald-500 shadow-sm";
+
+                        // Success Badge
+                        actionContainer.innerHTML = `
+                            <div class="flex flex-col items-center justify-center">
+                                <span class="bg-white/80 backdrop-blur text-emerald-700 font-bold px-4 py-2 rounded-xl border border-emerald-100 shadow-sm text-sm uppercase tracking-wider">
+                                    Target Selesai ✨
+                                </span>
+                            </div>
+                        `;
+                    }
+                }
 
             } catch (err) {
                 console.error('Error loading data:', err);
@@ -490,4 +636,5 @@
         }
     </script>
 </body>
+
 </html>
