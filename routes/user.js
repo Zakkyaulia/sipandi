@@ -4,10 +4,8 @@ const { isAuthenticated, isUser } = require('../middleware/auth');
 
 const userController = require('../controllers/userController');
 
-// User Dashboard
-router.get('/dashboard', isAuthenticated, isUser, (req, res) => {
-    res.render('user/dashboard', { user: req.session.user });
-});
+// User Dashboard - Menggunakan Controller baru
+router.get('/dashboard', isAuthenticated, isUser, userController.getUserDashboard);
 
 // Update Profile
 router.post('/profile/update', isAuthenticated, isUser, userController.updateProfile);

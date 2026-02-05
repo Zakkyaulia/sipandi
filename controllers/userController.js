@@ -1,9 +1,9 @@
-const { User } = require('../models');
+const { User, Pengajuan } = require('../models');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const userController = {
-    // Dashboard Stats
+    // Dashboard Admin Stats
     getDashboard: async (req, res) => {
         try {
             const totalUsers = await User.count({ where: { role: 'asn' } });
@@ -22,6 +22,39 @@ const userController = {
         } catch (error) {
             console.error("Error Dashboard:", error);
             res.status(500).send('Internal Server Error');
+        }
+    },
+
+    // Dashboard User Stats (ASN & ASN2)
+    getUserDashboard: async (req, res) => {
+        try {
+            const user = req.session.user;
+            let pengajuanStats = null;
+
+            // Jika role adalah ASN2, ambil statistik pengajuan barang
+            if (user.role === 'asn2') {
+                const pending = await Pengajuan.count({ where: { id_user: user.id_user, status_pengajuan: 'diajukan' } });
+                const approved = await Pengajuan.count({ where: { id_user: user.id_user, status_pengajuan: 'disetujui' } });
+                const rejected = await Pengajuan.count({ where: { id_user: user.id_user, status_pengajuan: 'ditolak' } });
+
+                pengajuanStats = {
+                    diajukan: pending,
+                    disetujui: approved,
+                    ditolak: rejected,
+                    total: pending + approved + rejected
+                };
+            }
+
+            res.render('user/dashboard', { 
+                user: user,
+                pengajuanStats: pengajuanStats 
+            });
+        } catch (error) {
+            console.error("Error User Dashboard:", error);
+            res.render('user/dashboard', { 
+                user: req.session.user, 
+                pengajuanStats: null 
+            });
         }
     },
 

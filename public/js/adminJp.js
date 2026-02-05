@@ -90,7 +90,7 @@ function renderJpList(submissions) {
 function getStatusBadge(status) {
     const badges = {
         'pending': '<span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">Pending</span>',
-        'diterima': '<span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Diterima</span>',
+        'disetujui': '<span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Disetujui</span>',
         'ditolak': '<span class="px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full">Ditolak</span>'
     };
     return badges[status] || '';

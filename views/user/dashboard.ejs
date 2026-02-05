@@ -27,6 +27,65 @@
 
             <main class="w-full flex-grow p-6">
 
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, <%= user.nama || user.name %>!</h2>
+                        <p class="text-gray-600">Dashboard pengelolaan bukti keaktifan<% if(user.role === 'asn2') { %> dan pengajuan barang<% } %>.</p>
+                    </div>
+                </div>
+
+                <% if (user.role === 'asn2' && typeof pengajuanStats !== 'undefined' && pengajuanStats) { %>
+                <div class="mb-8 animate-fade-in-up">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-sipandi-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10l8 4M9 7l8 4"></path>
+                        </svg>
+                        Ringkasan Pengajuan Barang
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <a href="/user/riwayat-pengajuan?status=all" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
+                            <div class="bg-purple-50 p-3 rounded-xl text-purple-600 group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Pengajuan</p>
+                                <p class="text-2xl font-black text-gray-800 mt-1"><%= pengajuanStats.total %></p>
+                            </div>
+                        </a>
+                        
+                        <a href="/user/riwayat-pengajuan?status=diajukan" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
+                            <div class="bg-blue-50 p-3 rounded-xl text-blue-600 group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Sedang Diproses</p>
+                                <p class="text-2xl font-black text-blue-600 mt-1"><%= pengajuanStats.diajukan %></p>
+                            </div>
+                        </a>
+
+                        <a href="/user/riwayat-pengajuan?status=disetujui" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
+                            <div class="bg-green-50 p-3 rounded-xl text-green-600 group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Disetujui</p>
+                                <p class="text-2xl font-black text-green-600 mt-1"><%= pengajuanStats.disetujui %></p>
+                            </div>
+                        </a>
+
+                        <a href="/user/riwayat-pengajuan?status=ditolak" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer group">
+                            <div class="bg-red-50 p-3 rounded-xl text-red-600 group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Ditolak</p>
+                                <p class="text-2xl font-black text-red-600 mt-1"><%= pengajuanStats.ditolak %></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <% } %>
+
                 <div id="jpTargetSection" class="hidden mb-8">
                     <div id="jpCard" class="relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all duration-300">
                         
@@ -35,7 +94,7 @@
                             <div class="flex-1 w-full text-center">
                                 <div class="flex items-center justify-center gap-3 mb-2">
                                     <div id="statusIconContainer" class="p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm">
-                                        </div>
+                                    </div>
                                     <div>
                                         <h3 id="statusTitle" class="text-lg font-bold text-gray-800">Memuat Data...</h3>
                                     </div>
@@ -58,17 +117,11 @@
                             </div>
 
                             <div id="actionContainer" class="flex-shrink-0">
-                                </div>
+                            </div>
 
                         </div>
 
                         <div class="absolute -right-6 -top-12 w-48 h-48 bg-white opacity-40 rounded-full blur-3xl pointer-events-none"></div>
-                    </div>
-                </div>
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
-                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, <%= user.nama || user.name %>!</h2>
-                        <p class="text-gray-600">Dashboard pengelolaan bukti keaktifan dan JP.</p>
                     </div>
                 </div>
 
@@ -110,7 +163,7 @@
 
                 <div class="card bg-white shadow-sm border border-gray-100 rounded-2xl overflow-hidden mb-8">
                     <div class="px-8 py-5 border-b border-gray-100 bg-gray-50/50">
-                        <h3 class="text-lg font-bold text-gray-800">Riwayat Kegiatan & Validasi</h3>
+                        <h3 class="text-lg font-bold text-gray-800">Riwayat Kegiatan & Validasi JP</h3>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">

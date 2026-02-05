@@ -3,6 +3,19 @@ let allPengajuans = [];
 
 // Load data on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Ambil parameter status dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const statusParam = urlParams.get('status');
+
+    // Jika ada parameter status, set nilai dropdown filter
+    if (statusParam) {
+        const statusFilter = document.getElementById('statusFilter');
+        if (statusFilter) {
+            statusFilter.value = statusParam;
+        }
+    }
+
+    // Load data (fungsi loadRiwayat biasanya akan membaca value dari dropdown)
     loadRiwayat();
 });
 

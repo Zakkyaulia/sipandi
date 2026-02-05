@@ -4,6 +4,21 @@ let currentPengajuan = null;
 
 // Load data on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // LOGIKA BARU: Cek parameter URL untuk auto-filter
+    const urlParams = new URLSearchParams(window.location.search);
+    const statusParam = urlParams.get('status');
+
+    if (statusParam) {
+        const statusFilter = document.getElementById('statusFilter');
+        if (statusFilter) {
+            // Pastikan option ada sebelum set value (untuk keamanan)
+            const optionExists = [...statusFilter.options].some(o => o.value === statusParam);
+            if (optionExists) {
+                statusFilter.value = statusParam;
+            }
+        }
+    }
+
     loadPengajuan();
 });
 

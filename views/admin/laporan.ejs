@@ -34,6 +34,13 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Custom class untuk kartu aktif */
+        .filter-card-active {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #22c55e; /* sipandi-green */
+            background-color: #f0fdf4; /* green-50 */
+        }
     </style>
 </head>
 
@@ -97,18 +104,53 @@
                 </div>
 
                 <div id="content-pengajuan" class="report-section">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 stats-container no-print">
-                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                            <p class="text-xs font-bold text-gray-400 uppercase">Total Pengajuan</p>
-                            <p id="stat-total-pengajuan" class="text-2xl font-black text-gray-800">0</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 stats-container no-print">
+                        <div onclick="filterStatus('all')" id="card-all" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 filter-card-active group">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-gray-600">Total Pengajuan</p>
+                                    <p id="stat-total-pengajuan" class="text-2xl font-black text-gray-800 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-lg text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-green-500">
-                            <p class="text-xs font-bold text-gray-400 uppercase">Disetujui</p>
-                            <p id="stat-acc-pengajuan" class="text-2xl font-black text-green-600">0</p>
+
+                        <div onclick="filterStatus('disetujui')" id="card-disetujui" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-green-50 group border-l-4 border-l-green-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-green-600">Disetujui</p>
+                                    <p id="stat-acc-pengajuan" class="text-2xl font-black text-green-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-green-50 rounded-lg text-green-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-blue-500">
-                            <p class="text-xs font-bold text-gray-400 uppercase">Diajukan</p>
-                            <p id="stat-pending-pengajuan" class="text-2xl font-black text-blue-600">0</p>
+
+                        <div onclick="filterStatus('diajukan')" id="card-diajukan" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-blue-50 group border-l-4 border-l-blue-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-blue-600">Diajukan</p>
+                                    <p id="stat-pending-pengajuan" class="text-2xl font-black text-blue-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div onclick="filterStatus('ditolak')" id="card-ditolak" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-red-50 group border-l-4 border-l-red-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-red-600">Ditolak</p>
+                                    <p id="stat-rejected-pengajuan" class="text-2xl font-black text-red-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-red-50 rounded-lg text-red-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -251,11 +293,20 @@
             users: []
         };
 
+        let currentStatusFilter = 'all'; // Menyimpan filter status aktif
+
         const MONTH_NAMES = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
         document.addEventListener('DOMContentLoaded', () => {
             const role = "<%= user.role %>";
             fetchAllData(role);
+
+            // Cek URL Parameter 'tab' untuk switch otomatis
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if(tabParam) {
+                switchTab(tabParam);
+            }
         });
 
         async function fetchAllData(role) {
@@ -274,15 +325,39 @@
 
         function switchTab(tabName) {
             document.querySelectorAll('.report-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            const targetContent = document.getElementById(`content-${tabName}`);
+            if(targetContent) {
+                targetContent.classList.remove('hidden');
+            }
 
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('bg-sipandi-green-600', 'text-white', 'shadow-md', 'shadow-green-100');
                 btn.classList.add('text-gray-500', 'hover:bg-gray-50');
             });
-            const active = document.getElementById(`tab-${tabName}`);
-            active.classList.add('bg-sipandi-green-600', 'text-white', 'shadow-md', 'shadow-green-100');
-            active.classList.remove('text-gray-500', 'hover:bg-gray-50');
+
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            if(activeBtn) {
+                activeBtn.classList.add('bg-sipandi-green-600', 'text-white', 'shadow-md', 'shadow-green-100');
+                activeBtn.classList.remove('text-gray-500', 'hover:bg-gray-50');
+            }
+        }
+
+        // --- FILTER STATUS LOGIC ---
+        function filterStatus(status) {
+            currentStatusFilter = status;
+            
+            // Visual Update: Highlight active card
+            ['all', 'disetujui', 'diajukan', 'ditolak'].forEach(s => {
+                const card = document.getElementById(`card-${s}`);
+                if (s === status) {
+                    card.classList.add('filter-card-active', 'bg-gray-50');
+                } else {
+                    card.classList.remove('filter-card-active', 'bg-gray-50');
+                }
+            });
+
+            // Re-apply filters to table
+            applyFilters();
         }
 
         // --- FETCH LOGIC ---
@@ -312,13 +387,13 @@
 
         // --- FILTER ENGINE ---
         function applyFilters() {
-            const selectedMonth = document.getElementById('filterBulan').value; // "all" or "0"-"11"
-            const selectedYear = document.getElementById('filterTahun').value; // "all" or "2024"
+            const selectedMonth = document.getElementById('filterBulan').value; 
+            const selectedYear = document.getElementById('filterTahun').value;
 
             renderFilteredPengajuan(selectedMonth, selectedYear);
             renderFilteredJp(selectedMonth, selectedYear);
-            renderStok(); // Stok stays realtime
-            renderUsers(); // Users stay all
+            renderStok(); 
+            renderUsers();
             
             updatePeriodText(selectedMonth, selectedYear);
         }
@@ -334,18 +409,29 @@
 
         function renderFilteredPengajuan(m, y) {
             const tbody = document.getElementById('bodyPengajuan');
-            const filtered = masterData.pengajuan.filter(p => {
+            
+            // Calculate Total Stats (Before Filtering by Status, But After Date)
+            // Ini agar angka di kartu tetap menunjukkan total berdasarkan periode, bukan 0 jika di filter
+            const dateFiltered = masterData.pengajuan.filter(p => {
                 const date = new Date(p.tanggal_pengajuan);
                 const matchM = m === 'all' || date.getMonth().toString() === m;
                 const matchY = y === 'all' || date.getFullYear().toString() === y;
                 return matchM && matchY;
             });
 
-            document.getElementById('stat-total-pengajuan').innerText = filtered.length;
-            document.getElementById('stat-acc-pengajuan').innerText = filtered.filter(p => p.status === 'disetujui').length;
-            document.getElementById('stat-pending-pengajuan').innerText = filtered.filter(p => p.status === 'diajukan').length;
+            // Update Stats Card Numbers
+            document.getElementById('stat-total-pengajuan').innerText = dateFiltered.length;
+            document.getElementById('stat-acc-pengajuan').innerText = dateFiltered.filter(p => p.status === 'disetujui').length;
+            document.getElementById('stat-pending-pengajuan').innerText = dateFiltered.filter(p => p.status === 'diajukan').length;
+            document.getElementById('stat-rejected-pengajuan').innerText = dateFiltered.filter(p => p.status === 'ditolak').length;
 
-            tbody.innerHTML = filtered.map(p => {
+            // Apply Status Filter for Table Display
+            const finalFiltered = dateFiltered.filter(p => {
+                if (currentStatusFilter === 'all') return true;
+                return p.status === currentStatusFilter;
+            });
+
+            tbody.innerHTML = finalFiltered.map(p => {
                 let statusClass = p.status === 'disetujui' ? "bg-green-100 text-green-700" : (p.status === 'ditolak' ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700");
                 return `
                     <tr class="hover:bg-gray-50 transition-colors">
@@ -358,12 +444,11 @@
                         <td class="px-8 py-4 text-xs italic text-gray-400">${p.catatan_admin || '-'}</td>
                     </tr>
                 `;
-            }).join('') || '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data untuk periode ini</td></tr>';
+            }).join('') || '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data untuk filter ini</td></tr>';
         }
 
         function renderFilteredJp(m, y) {
             const tbody = document.getElementById('bodyJp');
-            // Mapping month name to index for comparison if API returns strings like "Januari"
             const filtered = masterData.jp.filter(s => {
                 const matchM = m === 'all' || s.bulan === MONTH_NAMES[parseInt(m)];
                 const matchY = y === 'all' || s.tahun.toString() === y;
@@ -389,7 +474,6 @@
             const selectedMonth = document.getElementById('filterBulan').value;
             const selectedYear = document.getElementById('filterTahun').value;
 
-            // Tambahkan logika filter berdasarkan tanggal update terakhir
             const filtered = masterData.stok.filter(b => {
                 const date = new Date(b.updatedAt);
                 const matchM = selectedMonth === 'all' || date.getMonth().toString() === selectedMonth;
@@ -452,3 +536,175 @@
     </script>
 </body>
 </html>
+
+### 2. `views/partials/sidebaradmin.ejs`
+Saya memperbarui logika tautan "Laporan Rekapitulasi". Jika yang login adalah **Admin Validasi JP**, tautan akan otomatis memiliki query `?tab=jp`. Jika **Admin ATK**, maka `?tab=pengajuan`.
+
+```ejs
+<aside
+    class="bg-sipandi-green-800 text-white w-64 min-h-screen flex flex-col shadow-xl transition-all duration-300 hidden md:flex">
+    <div class="p-6 flex items-center space-x-3 border-b border-sipandi-green-700">
+        <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-10 h-10 rounded-full border-2 border-white">
+        <div>
+            <h1 class="text-xl font-bold tracking-wider">SIPANDI</h1>
+            <p class="text-xs text-sipandi-green-200">Biro Organisasi</p>
+        </div>
+    </div>
+
+    <nav class="flex-1 py-6 overflow-y-auto">
+        <ul class="space-y-2 px-4">
+
+            <li>
+                <% 
+                    let dashboardHref = "/admin/dashboard"; // Default Admin Utama
+                    if (user.role === 'admin_atk') dashboardHref = "/admin/pengajuan";
+                    if (user.role === 'admin_validasi_jp') dashboardHref = "/admin/jp";
+                %>
+                <a href="<%= dashboardHref %>"
+                    class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
+                    <%= (page === 'dashboard' || page === 'pengajuan' || page === 'jp') ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                        </path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <% if (user.role === 'admin' || user.role === 'admin_atk') { %>
+                <li>
+                    <a href="/admin/inventory"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
+                        <%= page === 'inventory' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10l8 4M9 7l8 4"></path>
+                        </svg>
+                        <span>Manajemen Barang</span>
+                    </a>
+                </li>
+
+                <% if (user.role === 'admin') { %>
+                <li>
+                    <a href="/admin/pengajuan"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
+                        <%= page === 'pengajuan' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                            </path>
+                        </svg>
+                        <span>Kelola Pengajuan</span>
+                    </a>
+                </li>
+                <% } %>
+            <% } %>
+
+            <% if (user.role === 'admin' || user.role === 'admin_validasi_jp') { %>
+                <% if (user.role === 'admin') { %>
+                <li>
+                    <a href="/admin/jp"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
+                        <%= page === 'jp' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <span>Kelola JP</span>
+                    </a>
+                </li>
+                <% } %>
+            <% } %>
+
+            <% if (user.role === 'admin') { %>
+                <li>
+                    <a href="/admin/users"
+                        class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
+                        <%= page === 'users' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                            </path>
+                        </svg>
+                        <span>Manajemen Pengguna</span>
+                    </a>
+                </li>
+            <% } %>
+
+            <li>
+                <% 
+                    // LOGIKA BARU: Link Laporan berdasarkan Role
+                    let laporanLink = '/admin/laporan';
+                    if(user.role === 'admin_validasi_jp') {
+                        laporanLink += '?tab=jp';
+                    } else if (user.role === 'admin_atk') {
+                        laporanLink += '?tab=pengajuan';
+                    }
+                    // Admin utama defaultnya tetap pengajuan atau bisa diset manual
+                %>
+                <a href="<%= laporanLink %>"
+                    class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
+                    <%= page === 'laporan' ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Laporan Rekapitulasi</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <div class="p-4 border-t border-sipandi-green-700">
+        <a href="#" onclick="confirmLogout(event)"
+            class="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-200 hover:bg-red-600 hover:text-white transition-colors duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                </path>
+            </svg>
+            <span>Logout</span>
+        </a>
+    </div>
+</aside>
+
+<script src="[https://cdn.jsdelivr.net/npm/sweetalert2@11](https://cdn.jsdelivr.net/npm/sweetalert2@11)"></script>
+<script>
+    function confirmLogout(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Yakin ingin logout?',
+            text: "Anda harus login kembali untuk mengakses sistem",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Logout',
+            cancelButtonText: 'Batal',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'rounded-xl font-sans',
+                title: 'text-lg font-bold text-gray-800',
+                htmlContainer: 'text-gray-600',
+                confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors mx-1 focus:ring-2 focus:ring-red-500 focus:ring-offset-1',
+                cancelButton: 'bg-gray-200 hover:bg-gray-300 text-gray-800 px-5 py-2.5 rounded-lg font-medium transition-colors mx-1 focus:ring-2 focus:ring-gray-300 focus:ring-offset-1'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Logout Berhasil!',
+                    text: 'Mengeluarkan anda dari sistem...',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    buttonsStyling: false,
+                    customClass: {
+                        popup: 'rounded-2xl font-sans'
+                    }
+                }).then(() => {
+                    window.location.href = '/logout';
+                });
+            }
+        });
+    }
+</script>
