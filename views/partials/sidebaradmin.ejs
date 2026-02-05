@@ -18,22 +18,31 @@
                     // Default Icon: Dashboard Grid
                     let dashboardIcon = "M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z";
 
-                    if (user.role === 'admin_atk') {
+                    // Variable untuk menentukan apakah menu ini aktif
+                    let isDashboardActive = false;
+
+                    if (user.role === 'admin') {
+                        // Admin Utama: Aktif hanya jika page == dashboard
+                        isDashboardActive = (page === 'dashboard');
+                    }
+                    else if (user.role === 'admin_atk') {
                         dashboardHref = "/admin/pengajuan";
                         dashboardLabel = "Kelola Pengajuan";
-                        // Icon: Clipboard List (Daftar)
                         dashboardIcon = "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01";
+                        // Admin ATK: Menu atas ini adalah homepagenya (Pengajuan)
+                        isDashboardActive = (page === 'pengajuan');
                     }
-                    if (user.role === 'admin_validasi_jp') {
+                    else if (user.role === 'admin_validasi_jp') {
                         dashboardHref = "/admin/jp";
                         dashboardLabel = "Kelola JP";
-                        // Icon: Badge Check (Validasi)
                         dashboardIcon = "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z";
+                        // Admin JP: Menu atas ini adalah homepagenya (JP)
+                        isDashboardActive = (page === 'jp');
                     }
                 %>
                 <a href="<%= dashboardHref %>"
                     class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 
-                   <%= (page === 'dashboard' || page === 'pengajuan' || page === 'jp') ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
+                   <%= isDashboardActive ? 'bg-sipandi-green-700 text-white shadow-md' : 'text-sipandi-green-100 hover:bg-sipandi-green-700 hover:text-white' %>">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="<%= dashboardIcon %>">

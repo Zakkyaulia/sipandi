@@ -1,4 +1,4 @@
-const { User, Pengajuan } = require('../models');
+const { User, Pengajuan, ValidasiJp, Barang, sequelize } = require('../models');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
@@ -6,17 +6,65 @@ const userController = {
     // Dashboard Admin Stats
     getDashboard: async (req, res) => {
         try {
-            const totalUsers = await User.count({ where: { role: 'asn' } });
-            const recentUsers = await User.findAll({
-                where: { role: 'asn' },
-                limit: 5,
-                order: [['createdAt', 'DESC']]
+            // 1. Hitung Total Pegawai (ASN & ASN2)
+            const totalPegawai = await User.count({ 
+                where: { 
+                    role: { [Op.or]: ['asn', 'asn2'] } 
+                } 
+            });
+
+            // 2. Hitung Pengajuan Pending
+            const pendingPengajuan = await Pengajuan.count({ 
+                where: { status_pengajuan: 'diajukan' } 
+            });
+
+            // 3. Hitung JP Pending
+            const pendingJp = await ValidasiJp.count({ 
+                where: { status: 'pending' } 
+            });
+
+            // 4. Hitung Barang Stok Menipis (Angka Statistik)
+            const lowStockItemsCount = await Barang.count({
+                where: {
+                    quantity: { [Op.lte]: sequelize.col('threshold_stok_sedikit') }
+                }
+            });
+
+            // 5. GET TOP 3 ASN BY JP (Hanya yang disetujui)
+            const topAsn = await ValidasiJp.findAll({
+                attributes: [
+                    'id_user',
+                    [sequelize.fn('SUM', sequelize.col('jumlah_jp')), 'total_jp']
+                ],
+                where: { status: { [Op.or]: ['disetujui', 'diterima'] } }, // Sesuaikan dengan enum di DB
+                include: [{
+                    model: User,
+                    attributes: ['nama', 'nip', 'unit_kerja']
+                }],
+                group: ['id_user'],
+                order: [[sequelize.col('total_jp'), 'DESC']],
+                limit: 3
+            });
+
+            // 6. GET DETAIL BARANG MENIPIS (Limit 5 barang paling kritis)
+            const lowStockDetails = await Barang.findAll({
+                where: {
+                    quantity: { [Op.lte]: sequelize.col('threshold_stok_sedikit') }
+                },
+                order: [['quantity', 'ASC']], // Urutkan dari stok paling sedikit
+                limit: 5
             });
 
             res.render('admin/dashboard', {
                 user: req.session.user,
-                totalUsers: totalUsers,
-                recentUsers: recentUsers,
+                stats: {
+                    totalPegawai,
+                    pendingPengajuan,
+                    pendingJp,
+                    lowStockItems: lowStockItemsCount
+                },
+                topAsn,         // Data Top 3 ASN
+                lowStockDetails, // Data Barang Menipis
                 page: 'dashboard'
             });
         } catch (error) {
@@ -31,7 +79,6 @@ const userController = {
             const user = req.session.user;
             let pengajuanStats = null;
 
-            // Jika role adalah ASN2, ambil statistik pengajuan barang
             if (user.role === 'asn2') {
                 const pending = await Pengajuan.count({ where: { id_user: user.id_user, status_pengajuan: 'diajukan' } });
                 const approved = await Pengajuan.count({ where: { id_user: user.id_user, status_pengajuan: 'disetujui' } });
@@ -58,7 +105,6 @@ const userController = {
         }
     },
 
-    // Render Halaman User
     getUsersPage: (req, res) => {
         res.render('admin/users', {
             user: req.session.user,
@@ -66,7 +112,6 @@ const userController = {
         });
     },
 
-    // API: Get List Users
     getUsersList: async (req, res) => {
         try {
             const { search, role } = req.query;
@@ -107,7 +152,6 @@ const userController = {
         }
     },
 
-    // API: Create User
     createUser: async (req, res) => {
         try {
             const { name, username, password, role, unit_kerja, email } = req.body;
@@ -136,7 +180,6 @@ const userController = {
         }
     },
 
-    // API: Update User (Admin)
     updateUser: async (req, res) => {
         try {
             const { id } = req.params;
@@ -174,11 +217,10 @@ const userController = {
         }
     },
 
-    // API: Update Profile (User Self)
     updateProfile: async (req, res) => {
         try {
-            const id = req.session.user.id_user; // Get ID from session
-            const { name, nip, password, unit_kerja, email } = req.body; // No role update
+            const id = req.session.user.id_user; 
+            const { name, nip, password, unit_kerja, email } = req.body; 
 
             const user = await User.findByPk(id);
             if (!user) {
@@ -204,12 +246,10 @@ const userController = {
 
             await user.save();
 
-            // Update Session
             req.session.user.nama = user.nama;
             req.session.user.nip = user.nip;
             req.session.user.unit_kerja = user.unit_kerja;
             req.session.user.email = user.email;
-            // Password not stored in session
 
             res.json({ success: true, message: 'Profil berhasil diperbarui' });
         } catch (error) {
@@ -218,7 +258,6 @@ const userController = {
         }
     },
 
-    // API: Change Password
     changePassword: async (req, res) => {
         try {
             const id = req.session.user.id_user;
@@ -246,7 +285,6 @@ const userController = {
         }
     },
 
-    // API: Delete User
     deleteUser: async (req, res) => {
         try {
             const { id } = req.params;
@@ -258,7 +296,6 @@ const userController = {
         }
     },
 
-    // API: Generate Password
     generatePassword: (req, res) => {
         const randomPassword = Math.random().toString(36).slice(-8);
         res.json({ success: true, password: randomPassword });
