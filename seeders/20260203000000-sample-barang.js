@@ -8,8 +8,6 @@ module.exports = {
                 quantity: 50,
                 satuan: 'rim',
                 keterangan: 'Kertas HVS ukuran A4 dengan gramatur 80 gram, isi 500 lembar per rim',
-                threshold_stok_sedikit: 15,
-                threshold_stok_habis: 5,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -18,8 +16,6 @@ module.exports = {
                 quantity: 8,
                 satuan: 'pcs',
                 keterangan: 'Pulpen tinta hitam standard untuk keperluan kantor',
-                threshold_stok_sedikit: 20,
-                threshold_stok_habis: 10,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -28,8 +24,6 @@ module.exports = {
                 quantity: 3,
                 satuan: 'pcs',
                 keterangan: 'Spidol untuk papan tulis whiteboard, berbagai warna',
-                threshold_stok_sedikit: 10,
-                threshold_stok_habis: 5,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -38,8 +32,6 @@ module.exports = {
                 quantity: 25,
                 satuan: 'pcs',
                 keterangan: 'Stapler ukuran besar untuk menjilid dokumen tebal',
-                threshold_stok_sedikit: 8,
-                threshold_stok_habis: 3,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -48,8 +40,6 @@ module.exports = {
                 quantity: 100,
                 satuan: 'box',
                 keterangan: 'Amplop coklat ukuran folio, isi 100 pcs per box',
-                threshold_stok_sedikit: 20,
-                threshold_stok_habis: 10,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -58,8 +48,6 @@ module.exports = {
                 quantity: 12,
                 satuan: 'pcs',
                 keterangan: 'Tinta printer Canon warna hitam original',
-                threshold_stok_sedikit: 10,
-                threshold_stok_habis: 5,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -68,8 +56,6 @@ module.exports = {
                 quantity: 150,
                 satuan: 'pcs',
                 keterangan: 'Map plastik untuk menyimpan dokumen',
-                threshold_stok_sedikit: 50,
-                threshold_stok_habis: 20,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -78,8 +64,6 @@ module.exports = {
                 quantity: 18,
                 satuan: 'pcs',
                 keterangan: 'Correction tape untuk mengoreksi tulisan',
-                threshold_stok_sedikit: 15,
-                threshold_stok_habis: 8,
                 createdAt: new Date(),
                 updatedAt: new Date()
             }

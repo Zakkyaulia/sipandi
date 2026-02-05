@@ -26,7 +26,6 @@
                 padding: 8px !important;
             }
             .stats-container { display: none !important; }
-            /* Force expand details on print if needed, or hide them */
             .detail-row { display: table-row !important; } 
             .btn-expand { display: none !important; }
         }
@@ -44,7 +43,6 @@
             border-color: #22c55e; /* sipandi-green */
             background-color: #f0fdf4; /* green-50 */
         }
-        /* Style untuk row detail */
         .detail-row {
             transition: all 0.3s ease;
         }
@@ -197,6 +195,58 @@
                 </div>
 
                 <div id="content-stok" class="report-section hidden">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 stats-container no-print">
+                        
+                        <div onclick="filterStokStatus('all')" id="card-stok-all" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 filter-card-active group">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-gray-600">Total Barang</p>
+                                    <p id="stat-total-stok" class="text-2xl font-black text-gray-800 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-lg text-gray-500">
+                                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10l8 4M9 7l8 4"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div onclick="filterStokStatus('Tersedia')" id="card-stok-tersedia" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-green-50 group border-l-4 border-l-green-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-green-600">Tersedia</p>
+                                    <p id="stat-tersedia-stok" class="text-2xl font-black text-green-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-green-50 rounded-lg text-green-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div onclick="filterStokStatus('Stok Sedikit')" id="card-stok-sedikit" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-yellow-50 group border-l-4 border-l-yellow-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-yellow-600">Stok Sedikit</p>
+                                    <p id="stat-sedikit-stok" class="text-2xl font-black text-yellow-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-yellow-50 rounded-lg text-yellow-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div onclick="filterStokStatus('Perbarui Stok')" id="card-stok-habis" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-red-50 group border-l-4 border-l-red-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-red-600">Perbarui Stok</p>
+                                    <p id="stat-habis-stok" class="text-2xl font-black text-red-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-red-50 rounded-lg text-red-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden printable-area">
                         <div class="p-8 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div>
@@ -228,6 +278,47 @@
                 </div>
 
                 <div id="content-jp" class="report-section hidden">
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 stats-container no-print">
+                        
+                        <div onclick="filterJpStatus('all')" id="card-jp-all" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 filter-card-active group">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-gray-600">Total Pegawai</p>
+                                    <p id="stat-total-jp-users" class="text-2xl font-black text-gray-800 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-lg text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div onclick="filterJpStatus('tercapai')" id="card-jp-tercapai" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-green-50 group border-l-4 border-l-green-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-green-600">Target Tercapai (>=20 JP)</p>
+                                    <p id="stat-tercapai-jp" class="text-2xl font-black text-green-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-green-50 rounded-lg text-green-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div onclick="filterJpStatus('belum')" id="card-jp-belum" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-red-50 group border-l-4 border-l-red-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-red-600">Belum Tercapai (<20 JP)</p>
+                                    <p id="stat-belum-jp" class="text-2xl font-black text-red-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-red-50 rounded-lg text-red-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden printable-area">
                         <div class="p-8 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div>
@@ -271,6 +362,59 @@
                 </div>
 
                 <div id="content-users" class="report-section hidden">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 stats-container no-print">
+                        
+                        <div onclick="filterUserUnit('all')" id="card-user-all" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 filter-card-active group">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-gray-600">Total Pegawai</p>
+                                    <p id="stat-total-users" class="text-2xl font-black text-gray-800 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-lg text-gray-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div onclick="filterUserUnit('Tata Laksana')" id="card-user-tatalaksana" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-blue-50 group border-l-4 border-l-blue-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-blue-600">Tata Laksana</p>
+                                    <p id="stat-tatalaksana-users" class="text-2xl font-black text-blue-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div onclick="filterUserUnit('Kelembagaan')" id="card-user-kelembagaan" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-purple-50 group border-l-4 border-l-purple-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-purple-600">Kelembagaan</p>
+                                    <p id="stat-kelembagaan-users" class="text-2xl font-black text-purple-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div onclick="filterUserUnit('RBAK')" id="card-user-rbak" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer transition-all hover:shadow-md hover:bg-orange-50 group border-l-4 border-l-orange-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase group-hover:text-orange-600">RBAK</p>
+                                    <p id="stat-rbak-users" class="text-2xl font-black text-orange-600 mt-1">0</p>
+                                </div>
+                                <div class="p-2 bg-orange-50 rounded-lg text-orange-600">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden printable-area">
                         <div class="p-8 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div>
@@ -316,7 +460,10 @@
         };
 
         let currentStatusFilter = 'all'; 
-        let currentJpSort = 'desc'; // Default sort JP descending (terbesar)
+        let currentStokStatusFilter = 'all'; 
+        let currentUserUnitFilter = 'all'; 
+        let currentJpStatusFilter = 'all'; // NEW FILTER FOR JP
+        let currentJpSort = 'desc'; 
 
         const MONTH_NAMES = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -365,7 +512,7 @@
             }
         }
 
-        // --- FILTER STATUS LOGIC ---
+        // --- FILTER STATUS LOGIC (PENGAJUAN) ---
         function filterStatus(status) {
             currentStatusFilter = status;
             
@@ -381,11 +528,78 @@
             applyFilters();
         }
 
+        // --- FILTER STATUS LOGIC (STOK) ---
+        function filterStokStatus(status) {
+            currentStokStatusFilter = status;
+            
+            const map = {
+                'all': 'card-stok-all',
+                'Tersedia': 'card-stok-tersedia',
+                'Stok Sedikit': 'card-stok-sedikit',
+                'Perbarui Stok': 'card-stok-habis'
+            };
+
+            Object.values(map).forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.remove('filter-card-active', 'bg-gray-50');
+            });
+
+            const activeId = map[status];
+            const activeEl = document.getElementById(activeId);
+            if(activeEl) activeEl.classList.add('filter-card-active', 'bg-gray-50');
+
+            applyFilters();
+        }
+
+        // --- FILTER UNIT LOGIC (USER) ---
+        function filterUserUnit(unit) {
+            currentUserUnitFilter = unit;
+
+            const map = {
+                'all': 'card-user-all',
+                'Tata Laksana': 'card-user-tatalaksana',
+                'Kelembagaan': 'card-user-kelembagaan',
+                'RBAK': 'card-user-rbak'
+            };
+
+            Object.values(map).forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.remove('filter-card-active', 'bg-gray-50');
+            });
+
+            const activeId = map[unit];
+            const activeEl = document.getElementById(activeId);
+            if(activeEl) activeEl.classList.add('filter-card-active', 'bg-gray-50');
+
+            applyFilters();
+        }
+
+        // --- FILTER JP STATUS LOGIC (NEW) ---
+        function filterJpStatus(status) {
+            currentJpStatusFilter = status;
+
+            const map = {
+                'all': 'card-jp-all',
+                'tercapai': 'card-jp-tercapai',
+                'belum': 'card-jp-belum'
+            };
+
+            Object.values(map).forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.remove('filter-card-active', 'bg-gray-50');
+            });
+
+            const activeId = map[status];
+            const activeEl = document.getElementById(activeId);
+            if(activeEl) activeEl.classList.add('filter-card-active', 'bg-gray-50');
+
+            applyFilters();
+        }
+
         // --- SORT JP LOGIC ---
         function sortJp(order) {
             currentJpSort = order;
             
-            // Update UI Button Style
             const btnAsc = document.getElementById('btn-sort-asc');
             const btnDesc = document.getElementById('btn-sort-desc');
             
@@ -401,7 +615,7 @@
                 btnAsc.classList.add('text-gray-600', 'hover:bg-white');
             }
 
-            applyFilters(); // Re-render table with new sort order
+            applyFilters();
         }
 
         function toggleJpDetail(nip) {
@@ -503,14 +717,12 @@
         function renderFilteredJp(m, y) {
             const tbody = document.getElementById('bodyJp');
             
-            // 1. Filter by Date first
             const dateFiltered = masterData.jp.filter(s => {
                 const matchM = m === 'all' || s.bulan === MONTH_NAMES[parseInt(m)];
                 const matchY = y === 'all' || s.tahun.toString() === y;
                 return matchM && matchY;
             });
 
-            // 2. Group by NIP
             const grouped = {};
             dateFiltered.forEach(item => {
                 const nip = item.user.nip;
@@ -522,18 +734,29 @@
                     };
                 }
                 
-                // Add to details list
                 grouped[nip].items.push(item);
                 
-                // Calculate Total JP (Only Approved/Received counts towards official total usually, 
-                // but let's count 'disetujui'/'diterima' for logic)
                 if (item.status === 'disetujui' || item.status === 'diterima') {
                     grouped[nip].totalJp += item.jumlah_jp;
                 }
             });
 
-            // 3. Convert to Array and Sort
-            let groupedArray = Object.values(grouped);
+            // Calculate Stats for JP
+            const totalUsers = Object.keys(grouped).length;
+            const tercapai = Object.values(grouped).filter(g => g.totalJp >= 20).length;
+            const belum = Object.values(grouped).filter(g => g.totalJp < 20).length;
+
+            if(document.getElementById('stat-total-jp-users')) document.getElementById('stat-total-jp-users').innerText = totalUsers;
+            if(document.getElementById('stat-tercapai-jp')) document.getElementById('stat-tercapai-jp').innerText = tercapai;
+            if(document.getElementById('stat-belum-jp')) document.getElementById('stat-belum-jp').innerText = belum;
+
+            // Apply Filter by JP Status (Tercapai / Belum)
+            let groupedArray = Object.values(grouped).filter(g => {
+                if (currentJpStatusFilter === 'all') return true;
+                if (currentJpStatusFilter === 'tercapai') return g.totalJp >= 20;
+                if (currentJpStatusFilter === 'belum') return g.totalJp < 20;
+                return true;
+            });
             
             if (currentJpSort === 'asc') {
                 groupedArray.sort((a, b) => a.totalJp - b.totalJp);
@@ -541,7 +764,6 @@
                 groupedArray.sort((a, b) => b.totalJp - a.totalJp);
             }
 
-            // 4. Render
             if (groupedArray.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data untuk periode ini</td></tr>';
                 return;
@@ -555,7 +777,6 @@
                     ? '<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-green-100 text-green-700">Terpenuhi (>20 JP)</span>'
                     : '<span class="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-red-100 text-red-700">Belum Terpenuhi</span>';
 
-                // Parent Row
                 let html = `
                     <tr class="hover:bg-gray-50 transition-colors border-b border-gray-100">
                         <td class="px-8 py-4">
@@ -575,7 +796,6 @@
                     </tr>
                 `;
 
-                // Child Row (Details)
                 html += `
                     <tr id="detail-row-${nip}" class="hidden detail-row bg-gray-50">
                         <td colspan="5" class="px-8 py-4">
@@ -616,19 +836,34 @@
             const selectedMonth = document.getElementById('filterBulan').value;
             const selectedYear = document.getElementById('filterTahun').value;
 
-            const filtered = masterData.stok.filter(b => {
+            const dateFiltered = masterData.stok.filter(b => {
                 const date = new Date(b.updatedAt);
                 const matchM = selectedMonth === 'all' || date.getMonth().toString() === selectedMonth;
                 const matchY = selectedYear === 'all' || date.getFullYear().toString() === selectedYear;
                 return matchM && matchY;
             });
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada aktivitas pembaruan stok untuk periode ini</td></tr>';
+            const total = dateFiltered.length;
+            const tersedia = dateFiltered.filter(b => b.status_stok === 'Tersedia').length;
+            const sedikit = dateFiltered.filter(b => b.status_stok === 'Stok Sedikit').length;
+            const habis = dateFiltered.filter(b => b.status_stok === 'Perbarui Stok').length;
+
+            if(document.getElementById('stat-total-stok')) document.getElementById('stat-total-stok').innerText = total;
+            if(document.getElementById('stat-tersedia-stok')) document.getElementById('stat-tersedia-stok').innerText = tersedia;
+            if(document.getElementById('stat-sedikit-stok')) document.getElementById('stat-sedikit-stok').innerText = sedikit;
+            if(document.getElementById('stat-habis-stok')) document.getElementById('stat-habis-stok').innerText = habis;
+
+            const finalFiltered = dateFiltered.filter(b => {
+                if (currentStokStatusFilter === 'all') return true;
+                return b.status_stok === currentStokStatusFilter;
+            });
+
+            if (finalFiltered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data untuk filter ini</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = filtered.map(b => {
+            tbody.innerHTML = finalFiltered.map(b => {
                 let stokClass = b.status_stok === 'Stok Sedikit' ? "bg-yellow-100 text-yellow-700" : (b.status_stok === 'Perbarui Stok' || b.quantity <= 0 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700");
                 return `
                     <tr class="hover:bg-gray-50 transition-colors">
@@ -644,7 +879,33 @@
 
         function renderUsers() {
             const tbody = document.getElementById('bodyUsers');
-            tbody.innerHTML = masterData.users.map(u => `
+
+            // 1. Calculate Stats (Total per Unit)
+            const total = masterData.users.length;
+            const tatalaksana = masterData.users.filter(u => u.unit_kerja === 'Tata Laksana').length;
+            const kelembagaan = masterData.users.filter(u => u.unit_kerja === 'Kelembagaan').length;
+            const rbak = masterData.users.filter(u => u.unit_kerja === 'RBAK' || u.unit_kerja === 'Reformasi Birokrasi dan Akuntabilitas Kinerja (RBAK)').length;
+
+            if(document.getElementById('stat-total-users')) document.getElementById('stat-total-users').innerText = total;
+            if(document.getElementById('stat-tatalaksana-users')) document.getElementById('stat-tatalaksana-users').innerText = tatalaksana;
+            if(document.getElementById('stat-kelembagaan-users')) document.getElementById('stat-kelembagaan-users').innerText = kelembagaan;
+            if(document.getElementById('stat-rbak-users')) document.getElementById('stat-rbak-users').innerText = rbak;
+
+            // 2. Filter by Unit
+            const filtered = masterData.users.filter(u => {
+                if (currentUserUnitFilter === 'all') return true;
+                if (currentUserUnitFilter === 'RBAK') {
+                    return u.unit_kerja === 'RBAK' || u.unit_kerja === 'Reformasi Birokrasi dan Akuntabilitas Kinerja (RBAK)';
+                }
+                return u.unit_kerja === currentUserUnitFilter;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data pegawai untuk unit ini</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(u => `
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="px-8 py-4 font-bold text-gray-800">${u.name}</td>
                     <td class="px-8 py-4 font-mono text-gray-500 text-xs">${u.username}</td>
@@ -660,30 +921,16 @@
             const table = document.getElementById(tableId);
             let csv = [];
             const rows = table.querySelectorAll("tr");
-            
-            // Loop through rows, BUT skip detail rows (which contain nested tables) to prevent garbage in CSV
-            // We only want the parent rows for a summary CSV, OR we could flatten it. 
-            // For simplicity and cleaner CSV, let's stick to the main visible rows unless it's a simple table.
-            
             for (let i = 0; i < rows.length; i++) {
-                // If it's a detail row (hidden/accordion), skip it to avoid duplication or nested table mess
                 if (rows[i].classList.contains('detail-row')) continue;
 
                 let row = [], cols = rows[i].querySelectorAll("td, th");
-                
-                // Only take columns that are NOT the expand button column (last one usually)
-                // In tableJp, the last column is 'Aksi' which is index 4.
-                
                 for (let j = 0; j < cols.length; j++) {
-                    // Skip Aksi column content
                     if (cols[j].innerText.trim() === 'Aksi' || cols[j].querySelector('button')) continue;
-                    
                     row.push('"' + cols[j].innerText.replace(/"/g, '""').replace(/\n/g, ' ') + '"');
                 }
-                
                 if (row.length > 0) csv.push(row.join(","));
             }
-            
             const blob = new Blob([csv.join("\n")], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);

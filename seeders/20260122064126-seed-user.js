@@ -20,7 +20,7 @@ module.exports = {
         nama: 'Budi ASN Dummy',
         nip: '111111111111111111', // 18 Karakter
         password: password,
-        role: 'asn',
+        role: 'asn2',
         unit_kerja: 'Tata Laksana',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -38,6 +38,16 @@ module.exports = {
         nip: '333333333333333333', // 18 Karakter
         password: password,
         role: 'admin_validasi_jp',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        nama: 'Paja tu Ha',
+        nip: '444444444444444444', // 18 Karakter
+        password: password,
+        email: 'paja@dummy.com',
+        unit_kerja: 'RBAK',
+        role: 'asn',
         createdAt: new Date(),
         updatedAt: new Date()
       }
