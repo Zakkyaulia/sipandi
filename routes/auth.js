@@ -55,9 +55,11 @@ router.post('/login', async (req, res) => {
         if (user.role === 'admin') {
             redirectUrl = '/admin/dashboard';
         } else if (user.role === 'admin_atk') {
-            redirectUrl = '/placeholder?page=admin-barang';
+            // Alihkan langsung ke halaman Kelola Pengajuan
+            redirectUrl = '/admin/pengajuan'; 
         } else if (user.role === 'admin_validasi_jp') {
-            redirectUrl = '/placeholder?page=admin-riwayat-jp';
+            // Alihkan langsung ke halaman Kelola JP
+            redirectUrl = '/admin/jp';
         }
 
         return res.json({ success: true, redirectUrl, message: 'Login berhasil' });

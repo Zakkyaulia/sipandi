@@ -118,7 +118,7 @@ const adminJpController = {
 
             // Update status to diterima
             await submission.update({
-                status: 'diterima',
+                status: 'disetujui',
                 catatan: catatan_admin || submission.catatan
             });
 

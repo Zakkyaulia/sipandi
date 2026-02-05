@@ -4,213 +4,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Lengkap - SIPANDI</title>
+    <title>Pusat Laporan - SIPANDI</title>
     <link rel="stylesheet" href="/css/output.css">
     <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* CSS Khusus Print - Menyembunyikan elemen lain saat mencetak */
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            .printable-area, .printable-area * {
-                visibility: visible;
-            }
+            body * { visibility: hidden; }
+            .printable-area, .printable-area * { visibility: visible; }
             .printable-area {
                 position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
+                left: 0; top: 0; width: 100%;
+                background: white !important;
             }
-            .no-print {
-                display: none !important;
+            .no-print { display: none !important; }
+            table { width: 100% !important; border-collapse: collapse; }
+            th, td { 
+                word-break: break-all !important; 
+                white-space: normal !important; 
+                border: 1px solid #e5e7eb !important;
+                padding: 8px !important;
             }
+            .stats-container { display: none !important; }
+        }
+        .report-section {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-gray-50 font-sans antialiased">
     <div class="flex h-screen overflow-hidden">
         <%- include('../partials/sidebaradmin', { page: 'laporan' }) %>
+        
         <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             <%- include('../partials/header', { pageTitle: 'Pusat Laporan & Arsip' }) %>
 
             <main class="w-full flex-grow p-6">
-                
-                <div class="mb-6 border-b border-gray-200">
-                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="reportTabs">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4 no-print">
+                    <div class="bg-white p-2 rounded-2xl shadow-sm border border-gray-100 inline-flex flex-wrap gap-2">
                         <% if (user.role === 'admin' || user.role === 'admin_atk') { %>
-                        <li class="mr-2">
-                            <button onclick="switchTab('pengajuan')" id="tab-pengajuan" class="inline-block p-4 text-sipandi-green-600 border-b-2 border-sipandi-green-600 rounded-t-lg active hover:text-sipandi-green-600 hover:border-sipandi-green-600 transition-all">
-                                💼 Laporan Pengajuan Barang
+                            <button onclick="switchTab('pengajuan')" id="tab-pengajuan" class="tab-btn px-6 py-2.5 rounded-xl font-bold text-sm transition-all bg-sipandi-green-600 text-white shadow-md shadow-green-100">
+                                💼 Pengajuan Barang
                             </button>
-                        </li>
-                        <li class="mr-2">
-                            <button onclick="switchTab('stok')" id="tab-stok" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 transition-all">
-                                📦 Laporan Stok Barang
+                            <button onclick="switchTab('stok')" id="tab-stok" class="tab-btn px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50">
+                                📦 Stok Barang
                             </button>
-                        </li>
                         <% } %>
 
                         <% if (user.role === 'admin' || user.role === 'admin_validasi_jp') { %>
-                        <li class="mr-2">
-                            <button onclick="switchTab('jp')" id="tab-jp" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 transition-all">
-                                🎓 Laporan Validasi JP
+                            <button onclick="switchTab('jp')" id="tab-jp" class="tab-btn px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50">
+                                🎓 Validasi JP
                             </button>
-                        </li>
                         <% } %>
 
                         <% if (user.role === 'admin') { %>
-                        <li class="mr-2">
-                            <button onclick="switchTab('users')" id="tab-users" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 transition-all">
-                                👥 Laporan Data Pegawai
+                            <button onclick="switchTab('users')" id="tab-users" class="tab-btn px-6 py-2.5 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50">
+                                👥 Data Pegawai
                             </button>
-                        </li>
                         <% } %>
-                    </ul>
+                    </div>
+
+                    <div class="flex items-center gap-2 bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
+                        <select id="filterBulan" onchange="applyFilters()" class="text-sm border-none focus:ring-0 bg-transparent font-bold text-gray-700 cursor-pointer">
+                            <option value="all">Semua Bulan</option>
+                            <option value="0">Januari</option>
+                            <option value="1">Februari</option>
+                            <option value="2">Maret</option>
+                            <option value="3">April</option>
+                            <option value="4">Mei</option>
+                            <option value="5">Juni</option>
+                            <option value="6">Juli</option>
+                            <option value="7">Agustus</option>
+                            <option value="8">September</option>
+                            <option value="9">Oktober</option>
+                            <option value="10">November</option>
+                            <option value="11">Desember</option>
+                        </select>
+                        <div class="h-6 w-px bg-gray-200"></div>
+                        <select id="filterTahun" onchange="applyFilters()" class="text-sm border-none focus:ring-0 bg-transparent font-bold text-gray-700 cursor-pointer">
+                            <option value="all">Semua Tahun</option>
+                            <% const currentYear = new Date().getFullYear(); 
+                               for(let i = currentYear; i >= 2024; i--) { %>
+                                <option value="<%= i %>"><%= i %></option>
+                            <% } %>
+                        </select>
+                    </div>
                 </div>
 
                 <div id="content-pengajuan" class="report-section">
-                    <div class="bg-white rounded-xl shadow-md p-6 printable-area">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 stats-container no-print">
+                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                            <p class="text-xs font-bold text-gray-400 uppercase">Total Pengajuan</p>
+                            <p id="stat-total-pengajuan" class="text-2xl font-black text-gray-800">0</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-green-500">
+                            <p class="text-xs font-bold text-gray-400 uppercase">Disetujui</p>
+                            <p id="stat-acc-pengajuan" class="text-2xl font-black text-green-600">0</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm border-l-4 border-l-blue-500">
+                            <p class="text-xs font-bold text-gray-400 uppercase">Diajukan</p>
+                            <p id="stat-pending-pengajuan" class="text-2xl font-black text-blue-600">0</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden printable-area">
+                        <div class="p-8 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div>
-                                <h3 class="text-xl font-bold text-gray-800">Laporan Pengajuan Barang</h3>
-                                <p class="text-sm text-gray-500">Rekapitulasi seluruh pengajuan barang masuk.</p>
+                                <h3 class="text-xl font-black text-gray-800 uppercase tracking-tight">Laporan Pengajuan Barang</h3>
+                                <p id="period-text-pengajuan" class="text-sm text-gray-500 italic">Periode: Semua Data</p>
                             </div>
                             <div class="flex gap-2 no-print">
-                                <button onclick="exportToExcel('tablePengajuan', 'Laporan_Pengajuan_Barang')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 flex items-center gap-2">
-                                    <span>📥</span> Excel
+                                <button onclick="exportToExcel('tablePengajuan', 'Laporan_Pengajuan')" class="p-2.5 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
-                                <button onclick="printArea('content-pengajuan')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 flex items-center gap-2">
-                                    <span>🖨️</span> Print / PDF
+                                <button onclick="printArea('content-pengajuan')" class="p-2.5 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
                             </div>
                         </div>
                         <div class="overflow-x-auto">
-                            <table id="tablePengajuan" class="w-full text-sm text-left text-gray-500 border border-gray-200">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+                            <table id="tablePengajuan" class="w-full text-sm">
+                                <thead class="bg-gray-50/50 text-gray-500 font-bold uppercase text-[10px] tracking-widest border-b border-gray-100">
                                     <tr>
-                                        <th class="px-6 py-3 border-r">Tanggal</th>
-                                        <th class="px-6 py-3 border-r">Nama Pegawai</th>
-                                        <th class="px-6 py-3 border-r">Unit Kerja</th>
-                                        <th class="px-6 py-3 border-r">Barang</th>
-                                        <th class="px-6 py-3 border-r">Status</th>
-                                        <th class="px-6 py-3">Catatan Admin</th>
+                                        <th class="px-8 py-4 text-left">Tanggal</th>
+                                        <th class="px-8 py-4 text-left">Pegawai</th>
+                                        <th class="px-8 py-4 text-left">Barang</th>
+                                        <th class="px-8 py-4 text-left">Status</th>
+                                        <th class="px-8 py-4 text-left">Catatan Admin</th>
                                     </tr>
                                 </thead>
-                                <tbody id="bodyPengajuan">
-                                    <tr><td colspan="6" class="text-center py-4">Memuat data...</td></tr>
-                                </tbody>
+                                <tbody id="bodyPengajuan" class="divide-y divide-gray-50"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
                 <div id="content-stok" class="report-section hidden">
-                    <div class="bg-white rounded-xl shadow-md p-6 printable-area">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden printable-area">
+                        <div class="p-8 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div>
-                                <h3 class="text-xl font-bold text-gray-800">Laporan Stok Barang (ATK)</h3>
-                                <p class="text-sm text-gray-500">Data ketersediaan barang inventaris saat ini.</p>
+                                <h3 class="text-xl font-black text-gray-800 uppercase tracking-tight">Laporan Inventaris Barang</h3>
+                                <p class="text-sm text-gray-500">Update Stok Realtime Biro Organisasi</p>
                             </div>
                             <div class="flex gap-2 no-print">
-                                <button onclick="exportToExcel('tableStok', 'Laporan_Stok_Barang')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 flex items-center gap-2">
-                                    <span>📥</span> Excel
+                                <button onclick="exportToExcel('tableStok', 'Laporan_Stok')" class="p-2.5 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
-                                <button onclick="printArea('content-stok')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 flex items-center gap-2">
-                                    <span>🖨️</span> Print / PDF
+                                <button onclick="printArea('content-stok')" class="p-2.5 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
                             </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table id="tableStok" class="w-full text-sm text-left text-gray-500 border border-gray-200">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
-                                    <tr>
-                                        <th class="px-6 py-3 border-r">Nama Barang</th>
-                                        <th class="px-6 py-3 border-r">Stok Saat Ini</th>
-                                        <th class="px-6 py-3 border-r">Satuan</th>
-                                        <th class="px-6 py-3 border-r">Status Ketersediaan</th>
-                                        <th class="px-6 py-3">Terakhir Update</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bodyStok">
-                                    <tr><td colspan="5" class="text-center py-4">Memuat data...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table id="tableStok" class="w-full text-sm">
+                            <thead class="bg-gray-50/50 text-gray-500 font-bold uppercase text-[10px] tracking-widest border-b border-gray-100">
+                                <tr>
+                                    <th class="px-8 py-4 text-left">Nama Barang</th>
+                                    <th class="px-8 py-4 text-left">Stok</th>
+                                    <th class="px-8 py-4 text-left">Satuan</th>
+                                    <th class="px-8 py-4 text-left">Status</th>
+                                    <th class="px-8 py-4 text-left">Terakhir Update</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyStok" class="divide-y divide-gray-50"></tbody>
+                        </table>
                     </div>
                 </div>
 
                 <div id="content-jp" class="report-section hidden">
-                    <div class="bg-white rounded-xl shadow-md p-6 printable-area">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden printable-area">
+                        <div class="p-8 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div>
-                                <h3 class="text-xl font-bold text-gray-800">Laporan Validasi JP ASN</h3>
-                                <p class="text-sm text-gray-500">Rekapitulasi bukti pengembangan kompetensi ASN.</p>
+                                <h3 class="text-xl font-black text-gray-800 uppercase tracking-tight">Rekapitulasi Jam Pelajaran ASN</h3>
+                                <p id="period-text-jp" class="text-sm text-gray-500 italic">Periode: Semua Data</p>
                             </div>
                             <div class="flex gap-2 no-print">
-                                <button onclick="exportToExcel('tableJp', 'Laporan_Validasi_JP')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 flex items-center gap-2">
-                                    <span>📥</span> Excel
+                                <button onclick="exportToExcel('tableJp', 'Laporan_JP')" class="p-2.5 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
-                                <button onclick="printArea('content-jp')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 flex items-center gap-2">
-                                    <span>🖨️</span> Print / PDF
+                                <button onclick="printArea('content-jp')" class="p-2.5 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
                             </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table id="tableJp" class="w-full text-sm text-left text-gray-500 border border-gray-200">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
-                                    <tr>
-                                        <th class="px-6 py-3 border-r">Nama ASN</th>
-                                        <th class="px-6 py-3 border-r">NIP</th>
-                                        <th class="px-6 py-3 border-r">Nama Sertifikat</th>
-                                        <th class="px-6 py-3 border-r">Jumlah JP</th>
-                                        <th class="px-6 py-3 border-r">Periode</th>
-                                        <th class="px-6 py-3 border-r">Status</th>
-                                        <th class="px-6 py-3">Tanggal Submit</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bodyJp">
-                                    <tr><td colspan="7" class="text-center py-4">Memuat data...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table id="tableJp" class="w-full text-sm">
+                            <thead class="bg-gray-50/50 text-gray-500 font-bold uppercase text-[10px] tracking-widest border-b border-gray-100">
+                                <tr>
+                                    <th class="px-8 py-4 text-left">Pegawai</th>
+                                    <th class="px-8 py-4 text-left">Sertifikat</th>
+                                    <th class="px-8 py-4 text-center">JP</th>
+                                    <th class="px-8 py-4 text-left">Periode</th>
+                                    <th class="px-8 py-4 text-left">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyJp" class="divide-y divide-gray-50"></tbody>
+                        </table>
                     </div>
                 </div>
 
                 <div id="content-users" class="report-section hidden">
-                    <div class="bg-white rounded-xl shadow-md p-6 printable-area">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden printable-area">
+                        <div class="p-8 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div>
-                                <h3 class="text-xl font-bold text-gray-800">Laporan Data Pegawai</h3>
-                                <p class="text-sm text-gray-500">Daftar seluruh akun pengguna sistem.</p>
+                                <h3 class="text-xl font-black text-gray-800 uppercase tracking-tight">Database Pegawai Sistem</h3>
+                                <p class="text-sm text-gray-500">Daftar Akun Aktif SIPANDI</p>
                             </div>
                             <div class="flex gap-2 no-print">
-                                <button onclick="exportToExcel('tableUsers', 'Laporan_Data_Pegawai')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 flex items-center gap-2">
-                                    <span>📥</span> Excel
+                                <button onclick="exportToExcel('tableUsers', 'Data_Pegawai')" class="p-2.5 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
-                                <button onclick="printArea('content-users')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 flex items-center gap-2">
-                                    <span>🖨️</span> Print / PDF
+                                <button onclick="printArea('content-users')" class="p-2.5 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
                             </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table id="tableUsers" class="w-full text-sm text-left text-gray-500 border border-gray-200">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
-                                    <tr>
-                                        <th class="px-6 py-3 border-r">Nama Lengkap</th>
-                                        <th class="px-6 py-3 border-r">NIP (Username)</th>
-                                        <th class="px-6 py-3 border-r">Role / Jabatan</th>
-                                        <th class="px-6 py-3 border-r">Unit Kerja</th>
-                                        <th class="px-6 py-3">Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bodyUsers">
-                                    <tr><td colspan="5" class="text-center py-4">Memuat data...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table id="tableUsers" class="w-full text-sm">
+                            <thead class="bg-gray-50/50 text-gray-500 font-bold uppercase text-[10px] tracking-widest border-b border-gray-100">
+                                <tr>
+                                    <th class="px-8 py-4 text-left">Nama</th>
+                                    <th class="px-8 py-4 text-left">NIP</th>
+                                    <th class="px-8 py-4 text-left">Unit Kerja</th>
+                                    <th class="px-8 py-4 text-left">Email</th>
+                                    <th class="px-8 py-4 text-left">Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyUsers" class="divide-y divide-gray-50"></tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -220,197 +243,211 @@
     </div>
 
     <script>
+        // Global Data Store
+        let masterData = {
+            pengajuan: [],
+            stok: [],
+            jp: [],
+            users: []
+        };
+
+        const MONTH_NAMES = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Load all data on init based on role
-            const userRole = "<%= user.role %>";
-            
-            if(['admin', 'admin_atk'].includes(userRole)) {
-                loadPengajuan();
-                loadStok();
-            }
-            if(['admin', 'admin_validasi_jp'].includes(userRole)) {
-                loadJp();
-            }
-            if(userRole === 'admin') {
-                loadUsers();
-            }
+            const role = "<%= user.role %>";
+            fetchAllData(role);
         });
 
-        // --- TAB SWITCHING ---
-        function switchTab(tabName) {
-            // Hide all sections
-            document.querySelectorAll('.report-section').forEach(el => el.classList.add('hidden'));
-            // Show selected section
-            document.getElementById(`content-${tabName}`).classList.remove('hidden');
-
-            // Reset tab styles
-            document.querySelectorAll('#reportTabs button').forEach(btn => {
-                btn.classList.remove('text-sipandi-green-600', 'border-sipandi-green-600');
-                btn.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
-            });
-            // Set active tab style
-            const activeTab = document.getElementById(`tab-${tabName}`);
-            activeTab.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
-            activeTab.classList.add('text-sipandi-green-600', 'border-sipandi-green-600');
+        async function fetchAllData(role) {
+            if(['admin', 'admin_atk'].includes(role)) {
+                await loadPengajuan();
+                await loadStok();
+            }
+            if(['admin', 'admin_validasi_jp'].includes(role)) {
+                await loadJp();
+            }
+            if(role === 'admin') {
+                await loadUsers();
+            }
+            applyFilters(); // Initial render
         }
 
-        // --- DATA LOADING ---
+        function switchTab(tabName) {
+            document.querySelectorAll('.report-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
 
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-sipandi-green-600', 'text-white', 'shadow-md', 'shadow-green-100');
+                btn.classList.add('text-gray-500', 'hover:bg-gray-50');
+            });
+            const active = document.getElementById(`tab-${tabName}`);
+            active.classList.add('bg-sipandi-green-600', 'text-white', 'shadow-md', 'shadow-green-100');
+            active.classList.remove('text-gray-500', 'hover:bg-gray-50');
+        }
+
+        // --- FETCH LOGIC ---
         async function loadPengajuan() {
-            try {
-                // Menggunakan API List yang sudah ada (bukan rekap count)
-                const res = await fetch('/admin/pengajuan/list?status=all&bidang=all'); 
-                const data = await res.json();
-                const tbody = document.getElementById('bodyPengajuan');
-                
-                if(data.success && data.pengajuans.length > 0) {
-                    tbody.innerHTML = data.pengajuans.map(p => `
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4">${new Date(p.tanggal_pengajuan).toLocaleDateString('id-ID')}</td>
-                            <td class="px-6 py-4 font-medium text-gray-900">${p.user.nama} <br><span class="text-xs text-gray-500">${p.user.nip}</span></td>
-                            <td class="px-6 py-4">${p.user.unit_kerja || '-'}</td>
-                            <td class="px-6 py-4">
-                                <ul class="list-disc list-inside text-xs">
-                                    ${p.items.map(i => `<li>${i.nama_barang} (${i.jumlah_diminta} ${i.satuan})</li>`).join('')}
-                                </ul>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 font-semibold leading-tight rounded-full ${p.status === 'disetujui' ? 'bg-green-100 text-green-700' : p.status === 'ditolak' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'} text-xs">
-                                    ${p.status.toUpperCase()}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-xs italic">${p.catatan_admin || '-'}</td>
-                        </tr>
-                    `).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Tidak ada data pengajuan.</td></tr>';
-                }
-            } catch (error) { console.error(error); }
+            const res = await fetch('/admin/pengajuan/list?status=all&bidang=all');
+            const data = await res.json();
+            if(data.success) masterData.pengajuan = data.pengajuans;
         }
 
         async function loadStok() {
-            try {
-                const res = await fetch('/admin/inventory/list'); 
-                const data = await res.json();
-                const tbody = document.getElementById('bodyStok');
-
-                if(data.success && data.barangs.length > 0) {
-                    tbody.innerHTML = data.barangs.map(b => `
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">${b.nama_barang}</td>
-                            <td class="px-6 py-4 font-bold ${b.quantity <= b.threshold_stok_habis ? 'text-red-600' : 'text-gray-800'}">${b.quantity}</td>
-                            <td class="px-6 py-4">${b.satuan}</td>
-                            <td class="px-6 py-4">${b.status_stok}</td>
-                            <td class="px-6 py-4">${new Date(b.updatedAt).toLocaleDateString('id-ID')}</td>
-                        </tr>
-                    `).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Tidak ada data stok.</td></tr>';
-                }
-            } catch (error) { console.error(error); }
+            const res = await fetch('/admin/inventory/list');
+            const data = await res.json();
+            if(data.success) masterData.stok = data.barangs;
         }
 
         async function loadJp() {
-            try {
-                const res = await fetch('/admin/jp/list?status=all&bidang=all&bulan=all&tahun=all'); 
-                const data = await res.json();
-                const tbody = document.getElementById('bodyJp');
-
-                if(data.success && data.submissions.length > 0) {
-                    tbody.innerHTML = data.submissions.map(s => `
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">${s.user.nama}</td>
-                            <td class="px-6 py-4">${s.user.nip}</td>
-                            <td class="px-6 py-4">${s.nama_sertif}</td>
-                            <td class="px-6 py-4 text-center font-bold">${s.jumlah_jp}</td>
-                            <td class="px-6 py-4">${s.bulan} ${s.tahun}</td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 font-semibold leading-tight rounded-full ${s.status === 'diterima' ? 'bg-green-100 text-green-700' : s.status === 'ditolak' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'} text-xs">
-                                    ${s.status.toUpperCase()}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">${new Date(s.createdAt).toLocaleDateString('id-ID')}</td>
-                        </tr>
-                    `).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">Tidak ada data JP.</td></tr>';
-                }
-            } catch (error) { console.error(error); }
+            const res = await fetch('/admin/jp/list?status=all&bidang=all&bulan=all&tahun=all');
+            const data = await res.json();
+            if(data.success) masterData.jp = data.submissions;
         }
 
         async function loadUsers() {
-            try {
-                const res = await fetch('/admin/users/list?role=all'); 
-                const data = await res.json();
-                const tbody = document.getElementById('bodyUsers');
-
-                if(data.success && data.users.length > 0) {
-                    tbody.innerHTML = data.users.map(u => `
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">${u.name}</td>
-                            <td class="px-6 py-4">${u.username}</td>
-                            <td class="px-6 py-4 uppercase font-bold text-xs">${u.role.replace(/_/g, ' ')}</td>
-                            <td class="px-6 py-4">${u.unit_kerja || '-'}</td>
-                            <td class="px-6 py-4">${u.email || '-'}</td>
-                        </tr>
-                    `).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Tidak ada data pegawai.</td></tr>';
-                }
-            } catch (error) { console.error(error); }
+            const res = await fetch('/admin/users/list?role=all');
+            const data = await res.json();
+            if(data.success) masterData.users = data.users;
         }
 
-        // --- FITUR DOWNLOAD EXCEL ---
-        function exportToExcel(tableId, filename = 'download') {
-            const table = document.getElementById(tableId);
-            const rows = table.querySelectorAll('tr');
-            let csvContent = "";
+        // --- FILTER ENGINE ---
+        function applyFilters() {
+            const selectedMonth = document.getElementById('filterBulan').value; // "all" or "0"-"11"
+            const selectedYear = document.getElementById('filterTahun').value; // "all" or "2024"
 
-            rows.forEach(row => {
-                const cols = row.querySelectorAll('th, td');
-                const rowData = [];
-                cols.forEach(col => {
-                    // Bersihkan text dari enter/spasi berlebih dan quote
-                    let data = col.innerText.replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""').trim();
-                    rowData.push(`"${data}"`);
-                });
-                csvContent += rowData.join(",") + "\r\n";
+            renderFilteredPengajuan(selectedMonth, selectedYear);
+            renderFilteredJp(selectedMonth, selectedYear);
+            renderStok(); // Stok stays realtime
+            renderUsers(); // Users stay all
+            
+            updatePeriodText(selectedMonth, selectedYear);
+        }
+
+        function updatePeriodText(m, y) {
+            const text = (m === 'all' && y === 'all') 
+                ? "Semua Data" 
+                : `${m !== 'all' ? MONTH_NAMES[m] : ''} ${y !== 'all' ? y : ''}`.trim();
+            
+            document.getElementById('period-text-pengajuan').innerText = `Periode: ${text}`;
+            document.getElementById('period-text-jp').innerText = `Periode: ${text}`;
+        }
+
+        function renderFilteredPengajuan(m, y) {
+            const tbody = document.getElementById('bodyPengajuan');
+            const filtered = masterData.pengajuan.filter(p => {
+                const date = new Date(p.tanggal_pengajuan);
+                const matchM = m === 'all' || date.getMonth().toString() === m;
+                const matchY = y === 'all' || date.getFullYear().toString() === y;
+                return matchM && matchY;
             });
 
-            // Create blob and download
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            
-            // Tanggal sekarang untuk nama file
-            const date = new Date().toISOString().slice(0,10);
-            
-            link.setAttribute("href", url);
-            link.setAttribute("download", `${filename}_${date}.csv`); // CSV bisa dibuka di Excel
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            document.getElementById('stat-total-pengajuan').innerText = filtered.length;
+            document.getElementById('stat-acc-pengajuan').innerText = filtered.filter(p => p.status === 'disetujui').length;
+            document.getElementById('stat-pending-pengajuan').innerText = filtered.filter(p => p.status === 'diajukan').length;
+
+            tbody.innerHTML = filtered.map(p => {
+                let statusClass = p.status === 'disetujui' ? "bg-green-100 text-green-700" : (p.status === 'ditolak' ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700");
+                return `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-8 py-4 font-medium text-gray-500">${new Date(p.tanggal_pengajuan).toLocaleDateString('id-ID')}</td>
+                        <td class="px-8 py-4"><span class="font-bold text-gray-800">${p.user.nama}</span><br><span class="text-[10px] text-gray-400 font-mono">${p.user.nip}</span></td>
+                        <td class="px-8 py-4 text-xs">
+                            ${p.items.map(i => `<div class="mb-1">• ${i.nama_barang} <b>(${i.jumlah_diminta} ${i.satuan}${p.status === 'disetujui' ? ' ➔ ' + i.jumlah_disetujui : ''})</b></div>`).join('')}
+                        </td>
+                        <td class="px-8 py-4"><span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${statusClass}">${p.status}</span></td>
+                        <td class="px-8 py-4 text-xs italic text-gray-400">${p.catatan_admin || '-'}</td>
+                    </tr>
+                `;
+            }).join('') || '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data untuk periode ini</td></tr>';
         }
 
-        // --- FITUR PRINT ---
-        function printArea(areaId) {
-            // Sembunyikan semua section dulu
-            document.querySelectorAll('.report-section').forEach(el => el.classList.add('hidden'));
-            
-            // Tampilkan hanya area yang mau diprint
-            const area = document.getElementById(areaId);
-            area.classList.remove('hidden');
-            
-            window.print();
+        function renderFilteredJp(m, y) {
+            const tbody = document.getElementById('bodyJp');
+            // Mapping month name to index for comparison if API returns strings like "Januari"
+            const filtered = masterData.jp.filter(s => {
+                const matchM = m === 'all' || s.bulan === MONTH_NAMES[parseInt(m)];
+                const matchY = y === 'all' || s.tahun.toString() === y;
+                return matchM && matchY;
+            });
 
-            // Kembalikan tampilan (tampilkan tab aktif lagi)
-            // Cek tab mana yang aktif (berdasarkan class text-sipandi-green-600)
-            const activeTabBtn = document.querySelector('#reportTabs button.text-sipandi-green-600');
-            if(activeTabBtn) {
-                const tabName = activeTabBtn.id.replace('tab-', '');
-                switchTab(tabName);
+            tbody.innerHTML = filtered.map(s => {
+                let jpStatusClass = s.status === 'diterima' || s.status === 'disetujui' ? "bg-green-100 text-green-700" : (s.status === 'ditolak' ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700");
+                return `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-8 py-4"><span class="font-bold text-gray-800">${s.user.nama}</span><br><span class="text-xs text-gray-400 font-mono">${s.user.nip}</span></td>
+                        <td class="px-8 py-4 text-gray-600 font-medium">${s.nama_sertif}</td>
+                        <td class="px-8 py-4 text-center font-black text-sipandi-green-600">${s.jumlah_jp}</td>
+                        <td class="px-8 py-4 text-gray-500 text-xs">${s.bulan} ${s.tahun}</td>
+                        <td class="px-8 py-4"><span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${jpStatusClass}">${s.status}</span></td>
+                    </tr>
+                `;
+            }).join('') || '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada data untuk periode ini</td></tr>';
+        }
+
+        function renderStok() {
+            const tbody = document.getElementById('bodyStok');
+            const selectedMonth = document.getElementById('filterBulan').value;
+            const selectedYear = document.getElementById('filterTahun').value;
+
+            // Tambahkan logika filter berdasarkan tanggal update terakhir
+            const filtered = masterData.stok.filter(b => {
+                const date = new Date(b.updatedAt);
+                const matchM = selectedMonth === 'all' || date.getMonth().toString() === selectedMonth;
+                const matchY = selectedYear === 'all' || date.getFullYear().toString() === selectedYear;
+                return matchM && matchY;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-400">Tidak ada aktivitas pembaruan stok untuk periode ini</td></tr>';
+                return;
             }
+
+            tbody.innerHTML = filtered.map(b => {
+                let stokClass = b.status_stok === 'Stok Sedikit' ? "bg-yellow-100 text-yellow-700" : (b.status_stok === 'Perbarui Stok' || b.quantity <= 0 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700");
+                return `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-8 py-4 font-bold text-gray-800">${b.nama_barang}</td>
+                        <td class="px-8 py-4 font-black ${b.quantity <= 5 ? 'text-red-600' : 'text-gray-900'}">${b.quantity}</td>
+                        <td class="px-8 py-4 text-gray-500">${b.satuan}</td>
+                        <td class="px-8 py-4"><span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${stokClass}">${b.status_stok}</span></td>
+                        <td class="px-8 py-4 text-gray-400 text-xs">${new Date(b.updatedAt).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderUsers() {
+            const tbody = document.getElementById('bodyUsers');
+            tbody.innerHTML = masterData.users.map(u => `
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-8 py-4 font-bold text-gray-800">${u.name}</td>
+                    <td class="px-8 py-4 font-mono text-gray-500 text-xs">${u.username}</td>
+                    <td class="px-8 py-4 text-gray-600">${u.unit_kerja || '-'}</td>
+                    <td class="px-8 py-4 break-all text-xs font-medium text-sipandi-green-600 max-w-[200px]">${u.email || '-'}</td>
+                    <td class="px-8 py-4 uppercase text-[10px] font-black text-gray-400">${u.role}</td>
+                </tr>
+            `).join('');
+        }
+
+        // --- UTILS ---
+        function exportToExcel(tableId, filename) {
+            const table = document.getElementById(tableId);
+            let csv = [];
+            const rows = table.querySelectorAll("tr");
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll("td, th");
+                for (let j = 0; j < cols.length; j++) row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
+                csv.push(row.join(","));
+            }
+            const blob = new Blob([csv.join("\n")], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `${filename}_${new Date().toLocaleDateString()}.csv`;
+            link.click();
+        }
+
+        function printArea(areaId) {
+            window.print();
         }
     </script>
 </body>

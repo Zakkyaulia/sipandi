@@ -57,11 +57,12 @@ app.get('/', (req, res) => {
         if (req.session.user.role === 'admin') {
             return res.redirect('/admin/dashboard');
         } else if (req.session.user.role === 'admin_atk') {
-            return res.redirect('/placeholder?page=admin-barang');
+            // Ubah dari placeholder ke halaman pengajuan
+            return res.redirect('/admin/pengajuan'); 
         } else if (req.session.user.role === 'admin_validasi_jp') {
-            return res.redirect('/placeholder?page=admin-riwayat-jp');
+            // Ubah dari placeholder ke halaman jp
+            return res.redirect('/admin/jp');
         } else {
-            // asn dan asn2 masuk ke user dashboard
             return res.redirect('/user/dashboard');
         }
     }
@@ -74,11 +75,10 @@ app.get('/dashboard', (req, res) => {
         if (req.session.user.role === 'admin') {
             return res.redirect('/admin/dashboard');
         } else if (req.session.user.role === 'admin_atk') {
-            return res.redirect('/placeholder?page=admin-barang');
+            return res.redirect('/admin/pengajuan');
         } else if (req.session.user.role === 'admin_validasi_jp') {
-            return res.redirect('/placeholder?page=admin-riwayat-jp');
+            return res.redirect('/admin/jp');
         } else {
-            // asn dan asn2 masuk ke user dashboard
             return res.redirect('/user/dashboard');
         }
     }

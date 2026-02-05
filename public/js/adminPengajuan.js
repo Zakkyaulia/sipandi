@@ -44,8 +44,17 @@ function renderPengajuanList(pengajuans) {
     tableBody.innerHTML = pengajuans.map((p, index) => {
         const statusBadge = getStatusBadge(p.status);
         const tanggal = formatDate(p.tanggal_pengajuan);
-        const itemsPreview = p.items.slice(0, 2).map(item => item.nama_barang).join(', ');
-        const moreItems = p.items.length > 2 ? ` +${p.items.length - 2}` : '';
+        
+        const itemsPreview = p.items.slice(0, 2).map(item => {
+            // Jika sudah disetujui, tampilkan format: Nama (Minta: X, Setuju: Y)
+            // Jika masih diajukan, tampilkan format: Nama (Minta: X)
+            const qtyText = p.status === 'disetujui' 
+                ? `${item.jumlah_diminta} ➔ ${item.jumlah_disetujui}` 
+                : `${item.jumlah_diminta}`;
+            return `<div class="text-xs mb-1">• ${item.nama_barang} <span class="font-bold">(${qtyText})</span></div>`;
+        }).join('');
+
+        const moreItems = p.items.length > 2 ? `<div class="text-[10px] text-gray-400">+${p.items.length - 2} barang lainnya...</div>` : '';
 
         return `
             <tr class="hover:bg-gray-50 transition-colors">
@@ -72,10 +81,6 @@ function renderPengajuanList(pengajuans) {
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                     <button onclick="viewDetail(${p.id})" 
                         class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white rounded-lg font-semibold transition-all shadow-sm">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
                         ${p.status === 'diajukan' ? 'Proses' : 'Detail'}
                     </button>
                 </td>
@@ -128,22 +133,32 @@ function viewDetail(id) {
     // Items
     const itemsContainer = document.getElementById('detailItems');
     itemsContainer.innerHTML = pengajuan.items.map(item => {
-        const disetujuiText = item.jumlah_disetujui !== null
-            ? `<span class="text-green-600 font-bold">${item.jumlah_disetujui} ${item.satuan} disetujui</span>`
-            : '';
+        // Tampilkan jumlah diminta selalu
+        let qtyDisplay = `
+            <div class="flex gap-4 text-sm mt-1">
+                <span class="text-gray-600">Diminta: <span class="font-bold text-gray-800">${item.jumlah_diminta} ${item.satuan}</span></span>
+            </div>
+        `;
 
-        return `
-            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                <div class="flex justify-between items-start">
-                    <div class="flex-1">
-                        <p class="font-bold text-gray-800">${item.nama_barang}</p>
-                        <div class="flex gap-4 text-sm text-gray-600 mt-1">
-                            <span>Diminta: ${item.jumlah_diminta} ${item.satuan}</span>
-                            <span>Stok: ${item.stok_tersedia} ${item.satuan}</span>
-                        </div>
-                        ${disetujuiText ? `<p class="text-sm mt-1">${disetujuiText}</p>` : ''}
+        // Jika status disetujui, tambahkan info jumlah disetujui
+        if (pengajuan.status === 'disetujui') {
+            qtyDisplay = `
+                <div class="flex flex-col gap-1 mt-1">
+                    <div class="flex gap-4 text-sm">
+                        <span class="text-gray-500">Diminta: ${item.jumlah_diminta} ${item.satuan}</span>
+                    </div>
+                    <div class="text-sm font-bold text-green-600 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        Disetujui: ${item.jumlah_disetujui} ${item.satuan}
                     </div>
                 </div>
+            `;
+        }
+
+        return `
+            <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-2">
+                <p class="font-bold text-gray-800">${item.nama_barang}</p>
+                ${qtyDisplay}
             </div>
         `;
     }).join('');
