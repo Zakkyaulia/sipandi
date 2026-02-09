@@ -15,6 +15,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'diproses_oleh',
         as: 'processed_pengajuans'
       });
+
+      // User belongs to many Roles
+      User.belongsToMany(models.Role, {
+        through: models.UserRole,
+        foreignKey: 'userId',
+        as: 'roles'
+      });
     }
   }
 
@@ -35,10 +42,6 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    role: {
-      type: DataTypes.ENUM('admin', 'asn', 'admin_atk', 'admin_validasi_jp', 'asn2'),
-      defaultValue: 'asn'
     },
     unit_kerja: {
       type: DataTypes.ENUM('Tata Laksana', 'Kelembagaan', 'RBAK'),

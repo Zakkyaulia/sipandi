@@ -21,11 +21,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      role: {
-        type: Sequelize.ENUM('admin', 'asn', 'asn2', 'admin_atk', 'admin_validasi_jp'),
-        allowNull: true,
-        defaultValue: 'asn'
-      },
+
       unit_kerja: {
         type: Sequelize.ENUM('Tata Laksana', 'Kelembagaan', 'RBAK'),
         allowNull: true

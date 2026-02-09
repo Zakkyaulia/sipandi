@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const { User } = require('../models');
 const passwordResetController = require('../controllers/passwordResetController');
+const authController = require('../controllers/authController');
 
 // GET Login page
 router.get('/login', (req, res) => {
@@ -14,61 +13,7 @@ router.get('/login', (req, res) => {
 });
 
 // POST Login
-router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-
-    try {
-        // Validasi NIP: Hanya 18 karakter, kecuali username adalah 'admin'
-        if (username !== 'admin' && username.length !== 18) {
-            return res.json({
-                success: false,
-                message: 'NIP harus berjumlah 18 digit angka'
-            });
-        }
-
-        // Cari user berdasarkan NIP
-        const user = await User.findOne({
-            where: { nip: username }
-        });
-
-        if (!user) {
-            return res.json({ success: false, message: 'Username atau password salah' });
-        }
-
-        // Cek password
-        const isValidPassword = await bcrypt.compare(password, user.password);
-        if (!isValidPassword) {
-            return res.json({ success: false, message: 'Username atau password salah' });
-        }
-
-        // Create session
-        req.session.user = {
-            id_user: user.id_user,
-            nama: user.nama,
-            nip: user.nip,
-            role: user.role,
-            unit_kerja: user.unit_kerja,
-            email: user.email
-        };
-
-        let redirectUrl = '/user/dashboard';
-        if (user.role === 'admin') {
-            redirectUrl = '/admin/dashboard';
-        } else if (user.role === 'admin_atk') {
-            // Alihkan langsung ke halaman Kelola Pengajuan
-            redirectUrl = '/admin/pengajuan'; 
-        } else if (user.role === 'admin_validasi_jp') {
-            // Alihkan langsung ke halaman Kelola JP
-            redirectUrl = '/admin/jp';
-        }
-
-        return res.json({ success: true, redirectUrl, message: 'Login berhasil' });
-
-    } catch (error) {
-        console.error('Login error:', error);
-        return res.json({ success: false, message: 'Terjadi kesalahan saat login' });
-    }
-});
+router.post('/login', authController.login);
 
 // GET Register page
 router.get('/register', (req, res) => {
@@ -80,78 +25,7 @@ router.get('/register', (req, res) => {
 });
 
 // POST Register
-router.post('/register', async (req, res) => {
-    const { username, nip, password, confirmPassword, email, unit_kerja } = req.body;
-
-    // Validation
-    if (!username || !nip || !password || !confirmPassword || !email || !unit_kerja) {
-        return res.render('register', {
-            error: 'Semua field harus diisi',
-            success: null
-        });
-    }
-
-    // Check password match
-    if (password !== confirmPassword) {
-        return res.render('register', {
-            error: 'Password dan Konfirmasi Password tidak sama',
-            success: null
-        });
-    }
-
-    // Validate NIP format (18 digits)
-    if (!/^\d{18}$/.test(nip)) {
-        return res.render('register', {
-            error: 'NIP harus 18 digit angka',
-            success: null
-        });
-    }
-
-    // Validate password length
-    if (password.length < 6) {
-        return res.render('register', {
-            error: 'Password minimal 6 karakter',
-            success: null
-        });
-    }
-
-    try {
-        // Check if user already exists
-        const existingUser = await User.findOne({ where: { nip } });
-        if (existingUser) {
-            return res.render('register', {
-                error: 'NIP sudah terdaftar',
-                success: null
-            });
-        }
-
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        // Create new user
-        await User.create({
-            nama: username,
-            nip,
-            password: hashedPassword,
-            role: 'asn', // Default role is asn (ASN)
-            email,
-            unit_kerja
-        });
-
-        // Redirect to login with success message
-        return res.render('login', {
-            error: null,
-            success: 'Registrasi berhasil! Silakan login dengan akun Anda.'
-        });
-    } catch (error) {
-        console.error('Register error:', error);
-        return res.render('register', {
-            error: 'Terjadi kesalahan saat registrasi',
-            success: null
-        });
-    }
-});
+router.post('/register', authController.register);
 
 // GET Logout
 router.get('/logout', (req, res) => {
@@ -172,5 +46,9 @@ router.post('/verify-otp', passwordResetController.verifyOTP);
 
 router.get('/reset-password', passwordResetController.renderResetPassword);
 router.post('/reset-password', passwordResetController.resetPassword);
+
+// --- Multi Role Routes ---
+router.get('/auth/select-role', authController.renderSelectRole);
+router.post('/auth/select-role', authController.selectRole);
 
 module.exports = router;

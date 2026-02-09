@@ -59,7 +59,6 @@
                                             class="cursor-pointer w-full px-4 py-3 text-sm border border-gray-300 rounded-lg
                                            focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none pr-10">
                                             <option value="all">Semua Posisi</option>
-                                            <option value="admin">Admin</option>
                                             <option value="asn">ASN</option>
                                             <option value="admin_atk">Admin ATK</option>
                                             <option value="admin_validasi_jp">Admin Validasi JP</option>
@@ -102,40 +101,133 @@
     <div id="formModal"
         class="hidden opacity-0 fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all duration-300 ease-out">
         <div
-            class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative transform scale-95 opacity-0 translate-y-4 transition-all duration-300 ease-out border border-gray-100">
+            class="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl relative transform scale-95 opacity-0 translate-y-4 transition-all duration-300 ease-out border border-gray-100 flex flex-col max-h-[90vh]">
 
-            <button onclick="closeModal()"
-                class="absolute top-5 right-5 text-gray-500 hover:text-gray-800 transition-colors p-1 rounded-full hover:bg-gray-100">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
-            </button>
-
-            <div class="mb-8">
-                <h3 id="modalTitle" class="text-2xl font-extrabold text-gray-800 tracking-tight"></h3>
-                <p class="text-sm text-gray-500 mt-1">Silakan lengkapi formulir di bawah ini.</p>
+            <div class="flex items-center justify-between mb-8 flex-shrink-0">
+                <div>
+                    <h3 id="modalTitle" class="text-2xl font-extrabold text-gray-800 tracking-tight"></h3>
+                    <p class="text-sm text-gray-500 mt-1">Kelola data dan hak akses pengguna.</p>
+                </div>
+                <button onclick="closeModal()"
+                    class="text-gray-400 hover:text-gray-800 transition-colors p-2 rounded-full hover:bg-gray-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
             </div>
 
-            <form id="userForm" onsubmit="handleSubmit(event)" class="space-y-5">
+            <form id="userForm" onsubmit="handleSubmit(event)" class="space-y-6 overflow-y-auto flex-1 pr-2">
                 <input type="hidden" id="editUserId">
 
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Nama Lengkap</label>
-                    <input type="text" id="formName" required placeholder="Contoh: Budi Santoso"
-                        class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
+                <!-- Grid Layout untuk Informasi Dasar -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Nama
+                            Lengkap</label>
+                        <input type="text" id="formName" required placeholder="Contoh: Budi Santoso"
+                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">NIP
+                            (Username)</label>
+                        <input type="text" id="formUsername" required placeholder="Nomor Induk Pegawai"
+                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
+                    </div>
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">NIP (Username)</label>
-                    <input type="text" id="formUsername" required placeholder="Nomor Induk Pegawai"
-                        class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Unit Kerja</label>
+                        <div class="relative">
+                            <select id="formUnitKerja"
+                                class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm appearance-none focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none cursor-pointer">
+                                <option value="">- Belum Diatur -</option>
+                                <option value="Tata Laksana">Tata Laksana</option>
+                                <option value="Kelembagaan">Kelembagaan</option>
+                                <option value="RBAK">RBAK</option>
+                            </select>
+                            <div
+                                class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Email</label>
+                        <input type="email" id="formEmail" placeholder="nama@domain.com"
+                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
+                    </div>
                 </div>
 
-                <div id="passwordField" class="space-y-1.5">
+                <!-- Bagian Role (Dropdown + Horizontal Radio) -->
+                <div class="space-y-6 pt-2">
+
+                    <!-- 1. Status Kepegawaian (Dropdown) -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Status Kepegawaian
+                            (Wajib)</label>
+                        <div class="relative">
+                            <select id="formPrimaryRole" name="primaryRole"
+                                class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm appearance-none focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none cursor-pointer">
+                                <option value="asn">ASN Aktif</option>
+                                <option value="asn2">ASN Lainnya (Pensiunan/Magang)</option>
+                            </select>
+                            <div
+                                class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Tanggung Jawab Tambahan (Horizontal Native Radio) -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Tanggung Jawab
+                            Tambahan (Opsional)</label>
+                        <div
+                            class="flex flex-row items-center justify-between w-full p-4 bg-gray-50 rounded-xl border border-gray-100">
+
+                            <!-- Option: None (Left) -->
+                            <label
+                                class="flex items-center gap-2 cursor-pointer hover:bg-gray-200 px-2 sm:px-4 py-2 rounded-lg transition-colors">
+                                <input type="radio" name="secondaryRole" value=""
+                                    class="w-4 h-4 text-sipandi-green-600 border-gray-300 focus:ring-sipandi-green-500 cursor-pointer"
+                                    checked>
+                                <span class="text-sm font-bold text-gray-700 whitespace-nowrap">Tidak Ada</span>
+                            </label>
+
+                            <!-- Option: Admin ATK (Center) -->
+                            <label
+                                class="flex items-center gap-2 cursor-pointer hover:bg-gray-200 px-2 sm:px-4 py-2 rounded-lg transition-colors">
+                                <input type="radio" name="secondaryRole" value="admin_atk"
+                                    class="w-4 h-4 text-sipandi-green-600 border-gray-300 focus:ring-sipandi-green-500 cursor-pointer">
+                                <span class="text-sm font-bold text-gray-700 whitespace-nowrap">Admin ATK</span>
+                            </label>
+
+                            <!-- Option: Admin JP (Right) -->
+                            <label
+                                class="flex items-center gap-2 cursor-pointer hover:bg-gray-200 px-2 sm:px-4 py-2 rounded-lg transition-colors">
+                                <input type="radio" name="secondaryRole" value="admin_validasi_jp"
+                                    class="w-4 h-4 text-sipandi-green-600 border-gray-300 focus:ring-sipandi-green-500 cursor-pointer">
+                                <span class="text-sm font-bold text-gray-700 whitespace-nowrap">Admin JP</span>
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="passwordField" class="space-y-1.5 pt-2">
                     <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Password</label>
                     <div class="flex gap-2">
-                        <input type="text" id="formPassword" placeholder="Buat kata sandi aman"
+                        <input type="text" id="formPassword" placeholder="Biarkan kosong jika tidak diubah"
                             class="flex-1 px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
                         <button type="button" onclick="generatePassword()"
                             class="bg-gray-800 text-white px-4 rounded-xl text-xs font-bold hover:bg-black transition shadow-sm hover:shadow active:scale-95">
@@ -144,62 +236,14 @@
                     </div>
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Role/Posisi</label>
-                    <div class="relative">
-                        <select id="formRole"
-                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm appearance-none focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none cursor-pointer">
-                            <option value="asn">ASN</option>
-                            <option value="admin_atk">Admin ATK</option>
-                            <option value="admin_validasi_jp">Admin Validasi JP</option>
-                            <option value="asn2">ASN 2</option>
-                        </select>
-                        <div
-                            class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Unit Kerja
-                    </label>
-                    <div class="relative">
-                        <select id="formUnitKerja"
-                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm appearance-none focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none cursor-pointer">
-                            <option value="">- Belum Diatur -</option>
-                            <option value="Tata Laksana">Tata Laksana</option>
-                            <option value="Kelembagaan">Kelembagaan</option>
-                            <option value="RBAK">Reformasi Birokrasi dan Akuntabilitas Kinerja (RBAK)</option>
-                        </select>
-                        <div
-                            class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Email
-                    </label>
-                    <input type="email" id="formEmail" placeholder="nama@domain.com"
-                        class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
-                </div>
-
-                <div class="pt-6 flex justify-center">
+                <div class="pt-4 flex justify-end gap-3 border-t border-gray-100 mt-4">
+                    <button type="button" onclick="closeModal()"
+                        class="px-6 py-2.5 rounded-xl text-gray-500 font-bold hover:bg-gray-100 transition-colors text-sm">
+                        BATAL
+                    </button>
                     <button type="submit"
-                        class="w-auto px-10 bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-                            </path>
-                        </svg>
-                        SIMPAN
+                        class="px-8 bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        SIMPAN DATA
                     </button>
                 </div>
             </form>
@@ -232,9 +276,17 @@
                     <p id="detailNIP" class="text-lg font-bold text-gray-800 break-all"></p>
                 </div>
 
+                <!-- Role Split Display -->
                 <div>
-                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Role/Posisi</p>
-                    <p id="detailRole" class="text-lg font-bold text-gray-800"></p>
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Status
+                        Kepegawaian</label>
+                    <p id="detailPrimaryRole" class="text-lg font-bold text-gray-800"></p>
+                </div>
+
+                <div id="detailSecondaryRoleContainer">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Tanggung
+                        Jawab Tambahan</label>
+                    <p id="detailSecondaryRole" class="text-lg font-bold text-gray-800"></p>
                 </div>
 
                 <div>
