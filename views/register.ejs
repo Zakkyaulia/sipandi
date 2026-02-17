@@ -7,11 +7,11 @@
     <title>Register - SIPANDI</title>
     <link rel="stylesheet" href="/css/output.css">
     <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
-    <!-- Google Fonts: Inter, Poppins -->
+    <!-- Google Fonts: Inter, Poppins, Playfair Display -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:ital,wght@0,600;0,700;0,800;1,600;1,700;1,800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
         rel="stylesheet">
     <style>
         body {
@@ -21,162 +21,223 @@
         .font-poppins {
             font-family: 'Poppins', sans-serif;
         }
+
+        /* Animation effects */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Glassmorphism card style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            /* Semi-transparent white */
+            backdrop-filter: blur(12px);
+            /* Blur effect */
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            /* Subtle border */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            /* Soft shadow */
+        }
     </style>
 </head>
 
-<body class="bg-white min-h-screen">
+<body class="min-h-screen relative font-sans text-gray-900 bg-gray-900">
 
-    <div class="flex flex-col md:flex-row min-h-screen">
-        <!-- Left Side: Background & Branding (50%) -->
-        <div class="hidden md:flex md:w-1/2 relative bg-gray-900 overflow-hidden">
-            <!-- Background Image -->
-            <div class="absolute inset-0">
-                <img src="/images/Kantor_Gubernur_Sumatra_Barat_oleh_Denas.jpg" alt="Kantor Gubernur Sumbar"
-                    class="w-full h-full object-cover">
-                <!-- Dark Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/70 to-gray-900/40"></div>
-            </div>
+    <!-- Full Background Image with Blur and Overlay -->
+    <div class="fixed inset-0 -z-10">
+        <!-- Image with blur -->
+        <img src="/images/Kantor_Gubernur_Sumatra_Barat_oleh_Denas.jpg" alt="Background Kantor Gubernur"
+            class="w-full h-full object-cover blur-[3px] scale-105">
 
-            <!-- Content -->
-            <div class="relative z-10 flex flex-col justify-center w-full px-12 lg:px-20 text-white">
-                <!-- Header Section -->
-                <div class="flex items-center gap-6 mb-8">
+        <!-- Gradient Green Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-emerald-800/60 to-teal-900/70"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col items-center justify-center p-6 lg:py-10 relative z-10">
+
+        <!-- Centered Card -->
+        <div class="w-full max-w-[600px] glass-card rounded-3xl p-8 md:p-12 animate-fade-in-up my-4">
+
+            <!-- Top Logo & Header -->
+            <div class="flex flex-col items-center text-center mb-8">
+                <div class="bg-white/80 p-2 rounded-full shadow-md mb-4 backdrop-blur-sm">
                     <img src="/images/logo-biro-organisasi.jpg" alt="Logo Biro Organisasi"
-                        class="w-20 h-20 rounded-xl shadow-lg border-2 border-white/20 object-cover backdrop-blur-sm">
-
-                    <div class="flex flex-col justify-center">
-                        <h1 class="text-4xl font-bold tracking-tight leading-none mb-1 font-poppins italic">SIPANDI</h1>
-                        <p class="text-lg text-gray-200 font-light leading-tight">Biro Organisasi
-                            Provinsi Sumatera
-                            Barat</p>
-                    </div>
+                        class="w-[64px] h-[64px] rounded-full object-cover">
                 </div>
-
-                <!-- Description -->
-                <div class="space-y-4 max-w-lg border-l-4 border-emerald-500 pl-6">
-                    <p class="text-base text-gray-200 leading-relaxed font-light">
-                        Sistem informasi terintegrasi untuk validasi JP ASN dan manajemen inventaris ATK Internal Biro
-                        Organisasi
-                        secara terpusat, akuntabel, dan efisien.
-                    </p>
-                </div>
-
-                <!-- Footer/Copyright subtle -->
-                <div class="absolute bottom-10 left-12 lg:left-20 text-xs text-gray-400 font-light">
-                    &copy; <%= new Date().getFullYear() %> Biro Organisasi Provinsi Sumatera Barat.
-                </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 font-poppins tracking-tight mb-2">Buat Akun Baru
+                </h1>
+                <p class="text-gray-600 font-medium text-sm md:text-base">Lengkapi data diri Anda untuk mendaftar di
+                    SIPANDI</p>
             </div>
-        </div>
 
-        <!-- Right Side: Register Form (50%) -->
-        <div
-            class="w-full md:w-1/2 flex flex-col justify-center items-center bg-gradient-to-br from-sipandi-green-50 to-sipandi-green-100 p-6 md:p-12">
-            <div
-                class="w-full max-w-md bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-10 border border-gray-100 my-8">
-                <!-- Mobile Logo (Visible only on small screens) -->
-                <div class="md:hidden flex flex-col items-center mb-6 text-center">
-                    <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-16 h-16 rounded-xl shadow-sm mb-3">
-                    <h2 class="text-xl font-bold text-gray-900">SIPANDI</h2>
+            <!-- Messages -->
+            <% if (locals.error) { %>
+                <div class="bg-red-50/90 backdrop-blur-sm border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-center gap-3 text-sm mb-6 animate-pulse shadow-sm"
+                    role="alert">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="font-medium">
+                        <%= error %>
+                    </span>
                 </div>
+                <% } %>
 
-                <div class="text-left mb-8">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">Buat Akun Baru</h2>
-                    <p class="mt-2 text-sm md:text-base text-gray-600">Lengkapi data diri Anda untuk mendaftar</p>
-                </div>
+                    <% if (locals.success) { %>
+                        <div class="bg-green-50/90 backdrop-blur-sm border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-3 text-sm mb-6 animate-pulse shadow-sm"
+                            role="alert">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-medium">
+                                <%= success %>
+                            </span>
+                        </div>
+                        <% } %>
 
-                <% if (locals.error) { %>
-                    <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-center gap-3 text-sm mb-6"
-                        role="alert">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span>
-                            <%= error %>
-                        </span>
-                    </div>
-                    <% } %>
+                            <!-- Register Form -->
+                            <form action="/register" method="POST" id="registerForm" class="space-y-5">
 
-                        <% if (locals.success) { %>
-                            <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-3 text-sm mb-6"
-                                role="alert">
-                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <span>
-                                    <%= success %>
-                                </span>
-                            </div>
-                            <% } %>
+                                <!-- Two Column Grid for Desktop -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                                <form action="/register" method="POST" id="registerForm" class="space-y-4">
                                     <!-- Username -->
-                                    <div class="space-y-1">
+                                    <div class="space-y-2">
                                         <label for="username"
-                                            class="text-sm font-semibold text-gray-700">Username</label>
-                                        <div class="relative">
+                                            class="text-sm font-semibold text-gray-700 ml-1">Username</label>
+                                        <div class="relative group">
+                                            <div
+                                                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors duration-200"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                                    </path>
+                                                </svg>
+                                            </div>
                                             <input type="text" id="username" name="username" required minlength="4"
-                                                class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200 text-gray-900 placeholder-gray-400"
-                                                placeholder="Masukkan username" autocomplete="username">
+                                                class="w-full pl-11 pr-4 py-3 bg-white/60 border border-gray-200/80 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 shadow-sm"
+                                                placeholder="Username" autocomplete="username">
                                         </div>
                                     </div>
 
                                     <!-- NIP -->
-                                    <div class="space-y-1">
-                                        <label for="nip" class="text-sm font-semibold text-gray-700">NIP</label>
-                                        <div class="relative">
-                                            <input type="text" id="nip" name="nip" required maxlength="18"
-                                                pattern="[0-9]{18}"
-                                                class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200 text-gray-900 placeholder-gray-400"
-                                                placeholder="Masukkan 18 digit NIP" title="NIP harus 18 digit angka">
-                                        </div>
-                                    </div>
-
-                                    <!-- Email -->
-                                    <div class="space-y-1">
-                                        <label for="email" class="text-sm font-semibold text-gray-700">Email</label>
-                                        <div class="relative">
-                                            <input type="email" id="email" name="email" required
-                                                class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200 text-gray-900 placeholder-gray-400"
-                                                placeholder="nama@email.com" autocomplete="email">
-                                        </div>
-                                    </div>
-
-                                    <!-- Unit Kerja -->
-                                    <div class="space-y-1">
-                                        <label for="unit_kerja" class="text-sm font-semibold text-gray-700">Unit
-                                            Kerja</label>
-                                        <div class="relative">
-                                            <select id="unit_kerja" name="unit_kerja" required
-                                                class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200 text-gray-900 appearance-none">
-                                                <option value="" disabled selected>Pilih Unit Kerja</option>
-                                                <option value="Tata Laksana">Tata Laksana</option>
-                                                <option value="Kelembagaan">Kelembagaan</option>
-                                                <option value="RBAK">RBAK</option>
-                                            </select>
+                                    <div class="space-y-2">
+                                        <label for="nip" class="text-sm font-semibold text-gray-700 ml-1">NIP</label>
+                                        <div class="relative group">
                                             <div
-                                                class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
+                                                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors duration-200"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                        stroke-width="2"
+                                                        d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0c0 .667.333 1 1 1 6 0 1 1 0 0 1 0">
+                                                    </path> <!-- Briefcase-like or ID card look -->
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                                    </path>
                                                 </svg>
                                             </div>
+                                            <input type="text" id="nip" name="nip" required maxlength="18"
+                                                pattern="[0-9]{18}"
+                                                class="w-full pl-11 pr-4 py-3 bg-white/60 border border-gray-200/80 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 shadow-sm"
+                                                placeholder="18 Digit NIP" title="NIP harus 18 digit angka">
                                         </div>
                                     </div>
+                                </div>
 
+                                <!-- Email -->
+                                <div class="space-y-2">
+                                    <label for="email" class="text-sm font-semibold text-gray-700 ml-1">Email</label>
+                                    <div class="relative group">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors duration-200"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <input type="email" id="email" name="email" required
+                                            class="w-full pl-11 pr-4 py-3 bg-white/60 border border-gray-200/80 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 shadow-sm"
+                                            placeholder="nama@email.com" autocomplete="email">
+                                    </div>
+                                </div>
+
+                                <!-- Unit Kerja -->
+                                <div class="space-y-2">
+                                    <label for="unit_kerja" class="text-sm font-semibold text-gray-700 ml-1">Unit
+                                        Kerja</label>
+                                    <div class="relative group">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors duration-200"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <select id="unit_kerja" name="unit_kerja" required
+                                            class="w-full pl-11 pr-4 py-3 bg-white/60 border border-gray-200/80 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 outline-none transition-all duration-300 text-gray-800 appearance-none shadow-sm cursor-pointer">
+                                            <option value="" disabled selected>Pilih Unit Kerja</option>
+                                            <option value="Tata Laksana">Tata Laksana</option>
+                                            <option value="Kelembagaan">Kelembagaan</option>
+                                            <option value="RBAK">RBAK</option>
+                                        </select>
+                                        <div
+                                            class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Two Column Grid for Password -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                                     <!-- Password -->
-                                    <div class="space-y-1">
-                                        <label for="password"
-                                            class="text-sm font-semibold text-gray-700">Password</label>
-                                        <div class="relative">
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between ml-1">
+                                            <label for="password"
+                                                class="text-sm font-semibold text-gray-700">Password</label>
+                                        </div>
+                                        <div class="relative group">
+                                            <div
+                                                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors duration-200"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                                    </path>
+                                                </svg>
+                                            </div>
                                             <input type="password" id="password" name="password" required minlength="6"
-                                                class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200 text-gray-900 placeholder-gray-400 pr-12"
-                                                placeholder="Minimal 6 karakter" autocomplete="new-password">
+                                                class="w-full pl-11 pr-12 py-3 bg-white/60 border border-gray-200/80 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 shadow-sm"
+                                                placeholder="Min 6 karakter" autocomplete="new-password">
                                             <button type="button" onclick="togglePasswordVisibility('password', this)"
-                                                class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-emerald-600 focus:outline-none transition-colors">
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-emerald-600 focus:outline-none transition-colors cursor-pointer z-10">
                                                 <svg class="w-5 h-5 block" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -198,16 +259,28 @@
                                     </div>
 
                                     <!-- Confirm Password -->
-                                    <div class="space-y-1">
-                                        <label for="confirmPassword"
-                                            class="text-sm font-semibold text-gray-700">Konfirmasi Password</label>
-                                        <div class="relative">
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between ml-1">
+                                            <label for="confirmPassword"
+                                                class="text-sm font-semibold text-gray-700">Konfirmasi Password</label>
+                                        </div>
+                                        <div class="relative group">
+                                            <div
+                                                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors duration-200"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                                    </path>
+                                                </svg>
+                                            </div>
                                             <input type="password" id="confirmPassword" name="confirmPassword" required
-                                                class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200 text-gray-900 placeholder-gray-400 pr-12"
-                                                placeholder="Masukkan ulang password" autocomplete="new-password">
+                                                class="w-full pl-11 pr-12 py-3 bg-white/60 border border-gray-200/80 rounded-xl focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 shadow-sm"
+                                                placeholder="Ulangi password" autocomplete="new-password">
                                             <button type="button"
                                                 onclick="togglePasswordVisibility('confirmPassword', this)"
-                                                class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-emerald-600 focus:outline-none transition-colors">
+                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-emerald-600 focus:outline-none transition-colors cursor-pointer z-10">
                                                 <svg class="w-5 h-5 block" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -227,29 +300,39 @@
                                             </button>
                                         </div>
                                     </div>
-
-                                    <div class="pt-4">
-                                        <button type="submit"
-                                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:shadow-emerald-600/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
-                                            <span>Daftar Sekarang</span>
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M14 5l7 7m0 0l-7 7m7-7H3">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </form>
-
-                                <div class="mt-8 text-center text-sm text-gray-500">
-                                    Sudah punya akun? <a href="/login"
-                                        class="text-emerald-600 font-bold hover:text-emerald-700 hover:underline transition-colors">Login
-                                        disini</a>
                                 </div>
-            </div>
-        </div>
-    </div>
 
+                                <!-- Submit Button -->
+                                <div class="pt-4">
+                                    <button type="submit"
+                                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/40 transform hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
+                                        <span>Daftar Sekarang</span>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M14 5l7 7m0 0l-7 7m7-7H3">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Login Link -->
+                            <div class="mt-8 text-center text-sm text-gray-600 font-medium">
+                                Sudah punya akun? <a href="/login"
+                                    class="text-emerald-700 font-bold hover:text-emerald-800 hover:underline transition-colors decoration-2 underline-offset-2">Login
+                                    disini</a>
+                            </div>
+
+        </div> <!-- End Card -->
+
+        <!-- Footer Credits -->
+        <div class="mt-4 text-center text-white/70 text-xs font-light tracking-wider">
+            &copy; <%= new Date().getFullYear() %> Biro Organisasi Provinsi Sumatera Barat
+        </div>
+
+    </div> <!-- End Main Container -->
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function togglePasswordVisibility(inputId, button) {
@@ -281,9 +364,10 @@
                     icon: 'error',
                     title: 'Validasi Gagal',
                     text: 'Password dan Konfirmasi Password tidak sama!',
+                    timer: 2000,
+                    showConfirmButton: false,
                     customClass: {
-                        popup: 'rounded-xl font-sans',
-                        confirmButton: 'bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-6 py-2.5'
+                        popup: 'rounded-xl font-sans'
                     }
                 });
                 return false;
@@ -295,9 +379,10 @@
                     icon: 'error',
                     title: 'Validasi Gagal',
                     text: 'NIP harus terdiri dari 18 digit angka!',
+                    timer: 2000,
+                    showConfirmButton: false,
                     customClass: {
-                        popup: 'rounded-xl font-sans',
-                        confirmButton: 'bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-6 py-2.5'
+                        popup: 'rounded-xl font-sans'
                     }
                 });
                 return false;

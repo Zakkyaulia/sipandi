@@ -7,11 +7,11 @@
     <title>Pilih Role - SIPANDI</title>
     <link rel="stylesheet" href="/css/output.css">
     <link rel="icon" type="image/png" href="/images/logo-biro-organisasi.jpg">
-    <!-- Google Fonts: Inter, Poppins -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:ital,wght@0,600;0,700;0,800;1,600;1,700;1,800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
         rel="stylesheet">
     <style>
         body {
@@ -21,132 +21,135 @@
         .font-poppins {
             font-family: 'Poppins', sans-serif;
         }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
-<body class="bg-white min-h-screen">
+<body class="min-h-screen relative font-sans text-gray-900 bg-gray-900 flex items-center justify-center p-6">
 
-    <div class="flex flex-col md:flex-row min-h-screen">
-        <!-- Left Side: Background & Branding (50%) -->
-        <div class="hidden md:flex md:w-1/2 relative bg-gray-900 overflow-hidden">
-            <!-- Background Image -->
-            <div class="absolute inset-0">
-                <img src="/images/Kantor_Gubernur_Sumatra_Barat_oleh_Denas.jpg" alt="Kantor Gubernur Sumbar"
-                    class="w-full h-full object-cover">
-                <!-- Dark Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/70 to-gray-900/40"></div>
+    <!-- Background -->
+    <div class="fixed inset-0 -z-10">
+        <img src="/images/Kantor_Gubernur_Sumatra_Barat_oleh_Denas.jpg" alt="Background"
+            class="w-full h-full object-cover blur-[3px] scale-105">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-emerald-800/60 to-teal-900/70"></div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="w-full max-w-[500px] glass-card rounded-3xl p-8 md:p-10 animate-fade-in-up shadow-2xl relative z-10">
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div
+                class="inline-flex justify-center items-center bg-white/80 p-4 rounded-full shadow-md mb-6 backdrop-blur-sm">
+                <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-12 h-12 rounded-full object-cover">
             </div>
-
-            <!-- Content -->
-            <div class="relative z-10 flex flex-col justify-center w-full px-12 lg:px-20 text-white">
-                <!-- Header Section -->
-                <div class="flex items-center gap-6 mb-8">
-                    <img src="/images/logo-biro-organisasi.jpg" alt="Logo Biro Organisasi"
-                        class="w-20 h-20 rounded-xl shadow-lg border-2 border-white/20 object-cover backdrop-blur-sm">
-
-                    <div class="flex flex-col justify-center">
-                        <h1 class="text-4xl font-bold tracking-tight leading-none mb-1 font-poppins italic">SIPANDI</h1>
-                        <p class="text-lg text-gray-200 font-light leading-tight">Biro Organisasi Provinsi Sumatera
-                            Barat</p>
-                    </div>
-                </div>
-
-                <!-- Description -->
-                <div class="space-y-4 max-w-lg border-l-4 border-emerald-500 pl-6">
-                    <p class="text-base text-gray-200 leading-relaxed font-light">
-                        Sistem informasi terintegrasi untuk validasi JP ASN dan manajemen inventaris ATK Internal Biro
-                        Organisasi
-                        secara terpusat, akuntabel, dan efisien.
-                    </p>
-                </div>
-
-                <!-- Footer -->
-                <div class="absolute bottom-10 left-12 lg:left-20 text-xs text-gray-400 font-light">
-                    &copy; <%= new Date().getFullYear() %> Biro Organisasi Provinsi Sumatera Barat.
-                </div>
-            </div>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 font-poppins mb-2">Pilih Role Akses</h1>
+            <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+                Anda terdaftar dengan beberapa hak akses. <br>Silahkan pilih role untuk masuk ke sistem.
+            </p>
         </div>
 
-        <!-- Right Side: Role Selection (50%) -->
-        <div
-            class="w-full md:w-1/2 flex flex-col justify-center items-center bg-gradient-to-br from-sipandi-green-50 to-sipandi-green-100 p-6 md:p-12">
-            <div
-                class="w-full max-w-md bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-10 border border-gray-100">
-
-                <!-- Mobile Logo -->
-                <div class="md:hidden flex flex-col items-center mb-6 text-center">
-                    <img src="/images/logo-biro-organisasi.jpg" alt="Logo" class="w-16 h-16 rounded-xl shadow-sm mb-3">
-                    <h2 class="text-xl font-bold text-gray-900">SIPANDI</h2>
-                </div>
-
-                <div class="text-left mb-8">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">Pilih Peran Masuk</h2>
-                    <p class="mt-2 text-sm md:text-base text-gray-600">Anda memiliki beberapa akses role. Silakan pilih
-                        salah satu untuk melanjutkan.</p>
-                </div>
-
-                <div class="space-y-4">
-                    <% roles.forEach(role=> { %>
-                        <form action="/auth/select-role" method="POST">
-                            <input type="hidden" name="selectedRole" value="<%= role.name %>">
-                            <button type="submit"
-                                class="w-full group relative flex items-center p-4 bg-white border-2 border-gray-100 rounded-xl hover:border-emerald-500 hover:bg-emerald-50/50 transition-all duration-200 shadow-sm hover:shadow-md text-left">
-                                <div class="flex-shrink-0 mr-4">
-                                    <div
-                                        class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-200">
-                                        <!-- Icon based on role name roughly -->
-                                        <% if(role.name.includes('admin')) { %>
+        <!-- Role List -->
+        <div class="space-y-4 max-h-[400px] overflow-y-auto pr-1 costume-scrollbar">
+            <% if (locals.roles && roles.length> 0) { %>
+                <% roles.forEach(role=> { %>
+                    <form action="/auth/select-role" method="POST" class="w-full">
+                        <input type="hidden" name="selectedRole" value="<%= role.name %>">
+                        <button type="submit"
+                            class="w-full group relative flex items-center p-4 bg-white/60 hover:bg-white border text-left border-white/50 hover:border-emerald-300 rounded-xl transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1">
+                            <!-- Icon Role -->
+                            <div class="flex-shrink-0 mr-4">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300 shadow-inner">
+                                    <% if(role.name.toLowerCase().includes('admin')) { %>
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                            </path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        <% } else { %>
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
                                                 </path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             </svg>
-                                            <% } else { %>
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                                    </path>
-                                                </svg>
-                                                <% } %>
-                                    </div>
+                                            <% } %>
                                 </div>
-                                <div>
-                                    <h3 class="text-base font-semibold text-gray-900 group-hover:text-emerald-700">
-                                        <%= role.display_name || role.name %>
-                                    </h3>
-                                    <p class="text-sm text-gray-500">Masuk sebagai <%= role.name.replace('_', ' '
-                                            ).toUpperCase() %>
-                                    </p>
-                                </div>
-                                <div class="absolute right-4 text-gray-300 group-hover:text-emerald-500">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </div>
-                            </button>
-                        </form>
-                        <% }) %>
-                </div>
+                            </div>
 
-                <div class="mt-8 pt-6 border-t border-gray-100 text-center">
-                    <a href="/login"
-                        class="text-sm text-gray-500 hover:text-emerald-600 transition-colors flex items-center justify-center gap-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                        Kembali ke Login
-                    </a>
-                </div>
+                            <!-- Text -->
+                            <div class="flex-grow">
+                                <h3
+                                    class="text-base md:text-lg font-bold text-gray-800 group-hover:text-emerald-700 transition-colors">
+                                    <%= role.display_name || role.name %>
+                                </h3>
+                                <p class="text-xs md:text-sm text-gray-500 font-medium">
+                                    Masuk sebagai <%= role.name.replace(/_/g, ' ' ).toUpperCase() %>
+                                </p>
+                            </div>
 
-            </div>
+                            <!-- Chevron -->
+                            <div
+                                class="text-gray-400 group-hover:text-emerald-500 transition-transform group-hover:translate-x-1">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                        </button>
+                    </form>
+                    <% }) %>
+                        <% } else { %>
+                            <div class="text-center p-4 bg-red-50/50 rounded-xl text-red-600">
+                                Tidak ada role yang tersedia. Hubungi Administrator.
+                            </div>
+                            <% } %>
+        </div>
+
+        <!-- Back Link -->
+        <div class="mt-8 pt-6 border-t border-gray-200/50 text-center">
+            <a href="/login"
+                class="text-gray-500 hover:text-emerald-700 transition-colors flex items-center justify-center gap-2 group text-sm font-medium">
+                <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Kembali ke Login
+            </a>
         </div>
     </div>
+
+    <!-- Footer -->
+    <div class="absolute bottom-6 text-center text-white/50 text-xs font-light tracking-wider w-full">
+        &copy; <%= new Date().getFullYear() %> Biro Organisasi Provinsi Sumatera Barat
+    </div>
+
 </body>
 
 </html>
