@@ -23,10 +23,10 @@ router.get('/profile', isAuthenticated, (req, res) => {
         pageTitle: 'Profil Saya'
     });
 });
-router.get('/submit-jp', isAuthenticated, renderPlaceholder('submit-jp', 'Submit JP'));
-router.get('/riwayat-submit', isAuthenticated, renderPlaceholder('riwayat-submit', 'Riwayat Submit'));
+// Submit JP dan Riwayat Submit sudah ditangani di routes/jp.js
 router.get('/pengajuan', isAuthenticated, renderPlaceholder('pengajuan', 'Pengajuan Barang'));
 router.get('/riwayat-pengajuan', isAuthenticated, renderPlaceholder('riwayat-pengajuan', 'Riwayat Pengajuan'));
+
 
 // Generic placeholder route used by links that point to /placeholder?page=...
 router.get('/placeholder', isAuthenticated, (req, res) => {

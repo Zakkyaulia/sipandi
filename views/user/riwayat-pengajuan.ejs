@@ -24,10 +24,10 @@
                         <!-- Filter & Search Section -->
                         <div class="mb-8">
                             <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-                                <div class="flex flex-row items-center gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                                     <!-- Search Bar -->
-                                    <div class="flex-1 relative">
+                                    <div class="relative">
                                         <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -43,8 +43,8 @@
                                     <!-- Status Filter -->
                                     <div class="relative">
                                         <select id="statusFilter" onchange="searchPengajuan()"
-                                            class="cursor-pointer px-4 py-3 text-sm border border-gray-300 rounded-lg
-                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none pr-10">
+                                            class="cursor-pointer w-full px-4 py-3 text-sm border border-gray-300 rounded-lg
+                                           focus:outline-none focus:ring-2 focus:ring-sipandi-green-500 bg-white appearance-none">
                                             <option value="all">Semua Status</option>
                                             <option value="diajukan">Diajukan</option>
                                             <option value="disetujui">Disetujui</option>
@@ -64,8 +64,8 @@
                             </div>
                         </div>
 
-                        <!-- Pengajuan List -->
-                        <div id="pengajuanList" class="space-y-4">
+                        <!-- Pengajuan Grid -->
+                        <div id="pengajuanList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <!-- Items will be populated by JavaScript -->
                         </div>
 

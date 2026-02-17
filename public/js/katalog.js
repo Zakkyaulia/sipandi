@@ -43,14 +43,14 @@ function renderKatalog(barangs) {
     }
 
     grid.innerHTML = barangs.map(barang => `
-        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200">
-            <div class="p-6">
+        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 flex flex-col">
+            <div class="p-6 flex flex-col flex-grow">
                 <div class="flex items-start justify-between mb-4">
                     <h3 class="text-lg font-bold text-gray-800 flex-1">${barang.nama_barang}</h3>
                     ${getStatusBadge(barang.status_stok)}
                 </div>
 
-                <div class="space-y-2 mb-4">
+                <div class="space-y-2 mb-4 flex-grow">
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Stok:</span>
                         <span class="font-bold text-gray-800">${barang.quantity} ${barang.satuan}</span>
@@ -65,7 +65,7 @@ function renderKatalog(barangs) {
                 <button 
                     onclick="openAjukanModal(${barang.id})" 
                     ${!barang.tersedia ? 'disabled' : ''}
-                    class="w-full ${barang.tersedia ? 'bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700' : 'bg-gray-300 cursor-not-allowed'} text-white py-3 rounded-lg font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                    class="w-full mt-auto ${barang.tersedia ? 'bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700' : 'bg-gray-300 cursor-not-allowed'} text-white py-3 rounded-lg font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>

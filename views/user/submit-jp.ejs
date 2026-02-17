@@ -21,43 +21,47 @@
 
                     <main class="w-full flex-grow p-6">
 
-                        <!-- Submit Form -->
-                        <div class="max-w-3xl mx-auto">
+                        <!-- Form Submit JP -->
+                        <div class="w-full">
                             <div class="bg-white rounded-xl shadow-md p-8 border border-gray-200">
-                                <h2 class="text-2xl font-extrabold text-gray-800 mb-6 border-b pb-3">
-                                    Submit Jam Pelatihan (JP)
-                                </h2>
 
-                                <form id="submitJpForm" class="space-y-6">
+                                <div class="mb-6">
+                                    <h2 class="text-2xl font-bold text-gray-800">Submit Jam Pelatihan (JP)</h2>
+                                    <p class="text-sm text-gray-500 mt-1">Silakan lengkapi formulir di bawah untuk
+                                        mengajukan JP Anda.</p>
+                                </div>
+
+                                <form id="submitJpForm" class="space-y-5">
+
                                     <!-- Nama Sertifikat -->
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-700 mb-2">
-                                            Nama Sertifikat/Pelatihan <span class="text-red-500">*</span>
+                                    <div class="space-y-1.5">
+                                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+                                            Nama Sertifikat <span class="text-red-500">*</span>
                                         </label>
                                         <input type="text" id="namaSertif" required
-                                            placeholder="Contoh: Pelatihan Manajemen Proyek"
-                                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sipandi-green-500 focus:border-transparent transition-all outline-none">
+                                            placeholder="Contoh: Pelatihan Manajemen Kinerja"
+                                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
                                     </div>
 
                                     <!-- Jumlah JP -->
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                                    <div class="space-y-1.5">
+                                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
                                             Jumlah JP <span class="text-red-500">*</span>
                                         </label>
                                         <input type="number" id="jumlahJp" required min="1"
-                                            placeholder="Masukkan jumlah jam pelatihan"
-                                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sipandi-green-500 focus:border-transparent transition-all outline-none">
-                                        <p class="text-xs text-gray-500 mt-1">Jumlah jam pelatihan yang didapat</p>
+                                            placeholder="Masukkan jumlah JP"
+                                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
                                     </div>
 
-                                    <!-- Bulan & Tahun -->
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <!-- Bulan -->
+                                        <div class="space-y-1.5">
+                                            <label
+                                                class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
                                                 Bulan <span class="text-red-500">*</span>
                                             </label>
                                             <select id="bulan" required
-                                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sipandi-green-500 focus:border-transparent transition-all outline-none appearance-none cursor-pointer">
+                                                class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none cursor-pointer">
                                                 <option value="">Pilih Bulan</option>
                                                 <option value="Januari">Januari</option>
                                                 <option value="Februari">Februari</option>
@@ -74,48 +78,51 @@
                                             </select>
                                         </div>
 
-                                        <div>
-                                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                        <!-- Tahun -->
+                                        <div class="space-y-1.5">
+                                            <label
+                                                class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
                                                 Tahun <span class="text-red-500">*</span>
                                             </label>
-                                            <input type="number" id="tahun" required min="2020" max="2030"
-                                                placeholder="2026"
-                                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sipandi-green-500 focus:border-transparent transition-all outline-none">
+                                            <input type="number" id="tahun" required min="2020" max="2100"
+                                                placeholder="Contoh: 2024"
+                                                class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400">
                                         </div>
                                     </div>
 
                                     <!-- File Sertifikat -->
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-700 mb-2">
-                                            File Sertifikat <span class="text-red-500">*</span>
+                                    <div class="space-y-1.5">
+                                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+                                            Upload Sertifikat <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="file" id="fileSertif" required accept=".pdf,.jpg,.jpeg,.png"
-                                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sipandi-green-500 focus:border-transparent transition-all outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-sipandi-green-50 file:text-sipandi-green-700 hover:file:bg-sipandi-green-100 cursor-pointer">
-                                        <p class="text-xs text-gray-500 mt-1">Format: PDF, JPG, PNG (Max 5MB)</p>
+                                        <input type="file" id="fileSertif" accept=".pdf,.jpg,.jpeg,.png" required
+                                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-sipandi-green-50 file:text-sipandi-green-700 hover:file:bg-sipandi-green-100 file:cursor-pointer">
+                                        <p class="text-xs text-gray-500 ml-1">Format: PDF, JPG, PNG (Max 5MB)</p>
                                     </div>
 
                                     <!-- Catatan -->
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-700 mb-2">
-                                            Catatan (Opsional)
+                                    <div class="space-y-1.5">
+                                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+                                            Catatan
                                         </label>
-                                        <textarea id="catatan" rows="3"
-                                            placeholder="Tambahkan catatan jika diperlukan..."
-                                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sipandi-green-500 focus:border-transparent transition-all outline-none resize-none"></textarea>
+                                        <textarea id="catatan" rows="3" placeholder="Catatan tambahan (opsional)"
+                                            class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 text-sm focus:ring-2 focus:ring-sipandi-green-500 focus:bg-white focus:border-transparent transition-all outline-none placeholder-gray-400 resize-none"></textarea>
                                     </div>
 
                                     <!-- Submit Button -->
-                                    <div class="flex gap-3 pt-4">
-                                        <button type="reset"
-                                            class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-lg font-bold transition-all">
-                                            Reset
-                                        </button>
+                                    <div class="pt-4 flex justify-center">
                                         <button type="submit"
-                                            class="flex-1 bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white py-3 rounded-lg font-bold shadow-lg transition-all">
-                                            Submit JP
+                                            class="w-auto px-10 bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            SUBMIT JP
                                         </button>
                                     </div>
+
                                 </form>
+
                             </div>
                         </div>
 

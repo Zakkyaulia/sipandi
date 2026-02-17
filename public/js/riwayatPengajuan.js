@@ -46,7 +46,7 @@ function renderPengajuanList(pengajuans) {
 
     if (pengajuans.length === 0) {
         list.innerHTML = `
-            <div class="bg-white rounded-xl shadow-md p-12 text-center">
+            <div class="col-span-full bg-white rounded-xl shadow-md p-12 text-center">
                 <svg class="w-24 h-24 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -61,49 +61,48 @@ function renderPengajuanList(pengajuans) {
     list.innerHTML = pengajuans.map(p => {
         const statusBadge = getStatusBadge(p.status);
         const tanggal = formatDate(p.tanggal_pengajuan);
-        const itemsPreview = p.items.slice(0, 3).map(item => item.nama_barang).join(', ');
-        const moreItems = p.items.length > 3 ? ` +${p.items.length - 3} lainnya` : '';
+        const itemsPreview = p.items.slice(0, 2).map(item => item.nama_barang).join(', ');
+        const moreItems = p.items.length > 2 ? ` +${p.items.length - 2} lainnya` : '';
 
         return `
-            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200">
-                <div class="p-6">
+            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 flex flex-col">
+                <div class="p-6 flex flex-col flex-grow">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Pengajuan #${p.id}</h3>
-                                ${statusBadge}
-                            </div>
-                            <p class="text-sm text-gray-500">
-                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Pengajuan #${p.id}</h3>
+                            <p class="text-sm text-gray-500 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
                                 ${tanggal}
                             </p>
                         </div>
+                        ${statusBadge}
                     </div>
 
-                    <div class="mb-4">
-                        <p class="text-xs font-bold text-gray-500 uppercase mb-2">Barang yang Diajukan</p>
-                        <p class="text-sm text-gray-700">${itemsPreview}${moreItems}</p>
-                        <p class="text-xs text-gray-500 mt-1">Total: ${p.items.length} item</p>
+                    <div class="mb-4 flex-grow space-y-3">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-sipandi-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10l8 4M9 7l8 4"></path>
+                                    </svg>
+                                    <span class="text-sm font-bold text-gray-700">Total Item</span>
+                                </div>
+                                <span class="text-2xl font-black text-sipandi-green-600">${p.items.length}</span>
+                            </div>
+                            <div class="pt-2 border-t border-gray-200">
+                                <p class="text-xs text-gray-600 line-clamp-2">${itemsPreview}${moreItems}</p>
+                            </div>
+                        </div>
                     </div>
-
-                    ${p.catatan_user ? `
-                        <div class="mb-4 bg-gray-50 p-3 rounded-lg">
-                            <p class="text-xs font-bold text-gray-500 uppercase mb-1">Catatan Anda</p>
-                            <p class="text-sm text-gray-700">${p.catatan_user}</p>
-                        </div>
-                    ` : ''}
-
-                    ${p.catatan_admin ? `
-                        <div class="mb-4 bg-blue-50 p-3 rounded-lg border border-blue-200">
-                            <p class="text-xs font-bold text-blue-700 uppercase mb-1">Catatan Admin</p>
-                            <p class="text-sm text-gray-700">${p.catatan_admin}</p>
-                        </div>
-                    ` : ''}
 
                     <button onclick="viewDetail(${p.id})" 
-                        class="w-full bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white py-3 rounded-lg font-bold text-sm shadow-md transition-all">
+                        class="w-full mt-auto bg-gradient-to-r from-sipandi-green-600 to-emerald-600 hover:from-sipandi-green-700 hover:to-emerald-700 text-white py-3 rounded-lg font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
                         Lihat Detail
                     </button>
                 </div>

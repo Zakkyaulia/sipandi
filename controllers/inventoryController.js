@@ -1,5 +1,6 @@
 const { Barang } = require('../models');
 const { Op } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 const inventoryController = {
     // Render Halaman Inventory
@@ -80,6 +81,21 @@ const inventoryController = {
                 return res.json({ success: false, message: 'Quantity tidak valid' });
             }
 
+            // Cek duplikasi nama barang (case-insensitive)
+            const existingBarang = await Barang.findOne({
+                where: Sequelize.where(
+                    Sequelize.fn('LOWER', Sequelize.col('nama_barang')),
+                    Sequelize.fn('LOWER', nama_barang.trim())
+                )
+            });
+
+            if (existingBarang) {
+                return res.json({
+                    success: false,
+                    message: 'Barang dengan nama ini sudah ada. Silakan gunakan nama yang berbeda.'
+                });
+            }
+
             // Validasi threshold
             const thresholdHabis = parseInt(threshold_stok_habis) || 5;
             const thresholdSedikit = parseInt(threshold_stok_sedikit) || 10;
@@ -133,6 +149,30 @@ const inventoryController = {
 
             if (quantity === undefined || quantity === null || quantity < 0) {
                 return res.json({ success: false, message: 'Quantity tidak valid' });
+            }
+
+            // Cek duplikasi nama barang (case-insensitive), kecuali barang yang sedang diedit
+            const existingBarang = await Barang.findOne({
+                where: {
+                    [Op.and]: [
+                        Sequelize.where(
+                            Sequelize.fn('LOWER', Sequelize.col('nama_barang')),
+                            Sequelize.fn('LOWER', nama_barang.trim())
+                        ),
+                        {
+                            id_barang: {
+                                [Op.ne]: id
+                            }
+                        }
+                    ]
+                }
+            });
+
+            if (existingBarang) {
+                return res.json({
+                    success: false,
+                    message: 'Barang dengan nama ini sudah ada. Silakan gunakan nama yang berbeda.'
+                });
             }
 
             // Validasi threshold
